@@ -217,10 +217,10 @@ extern char ERR_negative_priority[];
 extern char ERR_procedure_absent_in_implementation_module[];
 extern char ERR_declarations_difference_in_corresponding_modules[];
 
-extern void (*finish_procedure) ();
+extern void (*finish_procedure) (int number_of_errors);
 extern int number_of_errors;
 extern int new_error_flag;
-extern void error_with_parameter ();
+extern void error_with_parameter (register char *err, register char *par);
 
 /* Macros is defined for convenience of fixing errors without parameters. */
 #define error(err) error_with_parameter(err,0)

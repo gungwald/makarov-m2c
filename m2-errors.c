@@ -443,7 +443,7 @@ static char *system_error_table[] =
 /* This variable contains function
    which will be called after fatal error occurrence. */
 
-void (*finish_procedure) ();
+void (*finish_procedure) (int number_of_errors);
 
 
 /* This variable contains number of all errors occurred
@@ -470,8 +470,7 @@ int new_error_flag;
    MAXIMUM_NUMBER_OF_ERRORS-th error for translation of current module. */
 
 void
-error_with_parameter (err, par)
-     register char *err, *par;
+error_with_parameter (register char *err, register char *par)
 {
   register int fatal_error_flag, system_error_flag;
   register char **perr;

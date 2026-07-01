@@ -143,7 +143,9 @@ typedef struct
 #define VLS_ADD_STRING(vls,str) VLS_add_string_function(&(vls),str)
 
 
-extern void VLS_tailor_function (), VLS_add_string_function (), VLS_expand ();
+extern void VLS_tailor_function ();
+extern void VLS_add_string_function (register VLS *vls, char *str);
+extern void VLS_expand (register VLS *vls, int length);
 
 
 
@@ -153,19 +155,19 @@ extern char *input_file_name;
 extern int argument_count;
 extern VLS argument_vector;
 
-extern int command_tune ();
-extern void insert_argument ();
+extern int command_tune (int argc, char **argv, register char *description);
+extern void insert_argument (register int after, char *arg);
 extern void output_description_of_flags ();
-extern int next_parameter ();
+extern int next_parameter (int flag_of_first);
 extern int number_of_parameters ();
-extern int next_flag ();
-extern char *flag_characteristics ();
-extern int last_flag_place ();
-extern char *flag_parameter ();
+extern int next_flag (int flag_of_first);
+extern char *flag_characteristics (int argument_number, int *flag_has_parameter);
+extern int last_flag_place (char *flag_name);
+extern char *flag_parameter (char *flag_name);
 
-extern char *file_name_without_suffix ();
-extern char *file_name_suffix ();
-extern char *base_file_name ();
+extern char *file_name_without_suffix (register char *file_name);
+extern char *file_name_suffix (register char *file_name);
+extern char *base_file_name (register char *file_name);
 extern void test_input_file_name ();
 extern int value_of_hexadecimal_digit ();
 extern int M2_cap ();

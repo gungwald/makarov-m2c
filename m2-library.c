@@ -52,9 +52,7 @@ VLS_tailor_function (vls)
    the string place may be changed. */
 
 void
-VLS_add_string_function (vls, str)
-     register VLS *vls;
-     char *str;
+VLS_add_string_function (register VLS *vls, char *str)
 {
   register int length;
 
@@ -78,9 +76,7 @@ VLS_add_string_function (vls, str)
    LENGTH bytes.  Remember that the string place may be changed. */
 
 void
-VLS_expand (vls, length)
-     register VLS *vls;
-     int length;
+VLS_expand (register VLS *vls, int length)
 {
   register int vls_length;
   register char *new_vls_start;
@@ -161,9 +157,7 @@ static char *description_of_flags;
 /* Insert ARG in argument vector in the place with number after+1 (0,1,...). */
 
 void
-insert_argument (after, arg)
-     register int after;
-     char *arg;
+insert_argument (register int after, char *arg)
 {
   register int i;
 
@@ -201,10 +195,7 @@ compare_flags (flag1, flag2)
    Otherwise return TRUE (it means success). */
 
 int
-command_tune (argc, argv, description)
-     int argc;
-     char **argv;
-     register char *description;
+command_tune (int argc, char **argv, register char *description)
 {
   VLS suffixes, name;
   register int i;
@@ -404,8 +395,7 @@ static int only_parameters;
    in the command line.  Return 0 if all parameters are processed. */
 
 int
-next_parameter (flag_of_first)
-     int flag_of_first;
+next_parameter (int flag_of_first)
 {
   register struct flag_description *flag_description_ptr;
 
@@ -482,8 +472,7 @@ static int no_more_flags;
    in the command line.  Return 0 if all flags are processed. */
 
 int
-next_flag (flag_of_first)
-     int flag_of_first;
+next_flag (int flag_of_first)
 {
   register struct flag_description *flag_description_ptr;
   register int result;
@@ -528,8 +517,7 @@ next_flag (flag_of_first)
    is found than set up correspondingly *flag_has_parameter. */
 
 char *
-flag_characteristics (argument_number, flag_has_parameter)
-     int argument_number, *flag_has_parameter;
+flag_characteristics (int argument_number, int *flag_has_parameter)
 {
   register struct flag_description *flag_description_ptr;
 
@@ -558,8 +546,7 @@ flag_characteristics (argument_number, flag_has_parameter)
    Return 0 if the flag is not in the command line. */
 
 int
-last_flag_place (flag_name)
-     char *flag_name;
+last_flag_place (char *flag_name)
 {
   register char *current_flag_name;
   register int argument_number, last, saved_next_flag_number;
@@ -590,8 +577,7 @@ last_flag_place (flag_name)
    by white spaces). */
 
 char *
-flag_parameter (flag_name)
-     char *flag_name;
+flag_parameter (char *flag_name)
 {
   int argument_number;
 
@@ -621,8 +607,7 @@ char *input_file_name;
    in this memory. */
 
 char *
-file_name_without_suffix (file_name)
-     register char *file_name;
+file_name_without_suffix (register char *file_name)
 {
   register char *result;
   register int result_length;
@@ -642,8 +627,7 @@ file_name_without_suffix (file_name)
    If the suffix is absent than result is empty string. */
 
 char *
-file_name_suffix (file_name)
-     register char *file_name;
+file_name_suffix (register char *file_name)
 {
   register char *last_period;
 
@@ -658,8 +642,7 @@ file_name_suffix (file_name)
    If the directory name is absent than result is FILE_NAME. */
 
 char *
-base_file_name (file_name)
-     register char *file_name;
+base_file_name (register char *file_name)
 {
   register int directory_name_length;
 

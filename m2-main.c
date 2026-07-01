@@ -86,17 +86,17 @@ int picking_names_of_imported_modules;
 
 static void initiate_m2_libraries ();
 static void initiate_names_of_imported_files ();
-static long file_modification_time ();
-static void set_user_signal_action ();
+static long file_modification_time (char *file_name);
+static void set_user_signal_action (int initiation_flag);
 static void set_floating_point_exception_action ();
-static void m2c_exit ();
+static void m2c_exit (int code);
 static int make_MAKE ();
 static int make_make ();
 static int make_all ();
 static int make_dependence ();
 static int make_others ();
-static int Modula_to_C ();
-static int C_compilation ();
+static int Modula_to_C (register int arg);
+static int C_compilation (int after_modula, char *input_file_name, int original_argument_number);
 static int loading_by_C_compiler ();
 static int modula_analyzer ();
 static int create_icode_and_analyze_declarations ();
@@ -291,10 +291,7 @@ static char *modula_input_suffixes[] = MODULA_INPUT_SUFFIXES;
    is equal to NUMBER_OF_SUFFIXES. */
 
 static int
-it_is_input_suffix (suffix, input_suffixes, number_of_suffixes)
-     char *suffix;
-     register char **input_suffixes;
-     int number_of_suffixes;
+it_is_input_suffix (char *suffix, register char **input_suffixes, int number_of_suffixes)
 {
   register int i;
 
@@ -310,8 +307,7 @@ it_is_input_suffix (suffix, input_suffixes, number_of_suffixes)
    The result is depended on command line options and the used C compiler. */
 
 static char *
-modula_output_file_name (modula_file_name)
-     register char *modula_file_name;
+modula_output_file_name (register char *modula_file_name)
 {
   register char *str;
   VLS resultant_file_name;
@@ -344,14 +340,13 @@ modula_output_file_name (modula_file_name)
   return str;
 }
 
-/* Return pointer to dynamicly allocated memory containing name of
+/* Return pointer to dynamically allocated memory containing name of
    file which is output of C compiler (if the corresponding input file is
    SOURCE_NAME).  The result is depended on command line options and
    the used C compiler. */
 
 static char *
-c_output_file_name (source_name)
-     char *source_name;
+c_output_file_name (char *source_name)
 {
   register char *str;
   char *resultant_file_name;
@@ -415,8 +410,7 @@ start_picking_names_of_imported_files ()
    end of NAMES_OF_IMPORTED_FILES. */
 
 static void
-include_name_of_imported_file (file_name)
-     char *file_name;
+include_name_of_imported_file (char *file_name)
 {
   register unsigned int i;
   char *str;
@@ -437,8 +431,7 @@ include_name_of_imported_file (file_name)
    NAMES_OF_IMPORTED_FILES. */
 
 static char *
-name_of_imported_file (file_name_number)
-     int file_name_number;
+name_of_imported_file (int file_name_number)
 {
   return ((char **) VLS_BEGIN (names_of_imported_files))[file_name_number];
 }
@@ -454,8 +447,7 @@ name_of_imported_file (file_name_number)
    returns FALSE otherwise. */
 
 static int
-test_main_module (parameter_number)
-     int parameter_number;
+test_main_module (int parameter_number)
 {
   register int okay;
 
@@ -525,8 +517,7 @@ test_and_return_main_module ()
    were not fixed and FALSE otherwise. */
 
 static int
-pick_import (parameter_number)
-     int parameter_number;
+pick_import (int parameter_number)
 {
   register int okay;
 
@@ -549,8 +540,7 @@ pick_import (parameter_number)
    This function used when there is `-make' option on the command line. */
 
 static int
-add_import_to_argument (start_mark, number)
-     register int start_mark, number;
+add_import_to_argument (register int start_mark, register int number)
 {
   register char *str, *name_without_suffix;
   register int i, length;
@@ -598,9 +588,7 @@ add_import_to_argument (start_mark, number)
    the translator does not create object files in other directories. */
 
 static void
-change_implementation_name_to_object (main_module_argument_number,
-				      number_of_implementation_modules)
-     int main_module_argument_number, number_of_implementation_modules;
+change_implementation_name_to_object (int main_module_argument_number, int number_of_implementation_modules)
 {
   register int argument_number, length;
   register char *name_without_suffix, *str;
@@ -847,8 +835,7 @@ make_dependence ()
    module has been changed after the output file creation (or modification). */
 
 static int
-object_file_is_obsolete (argument_number_of_module)
-     register int argument_number_of_module;
+object_file_is_obsolete (register int argument_number_of_module)
 {
   long modification_time, max_modification_time_of_imported_modules;
   register int result;
@@ -986,8 +973,7 @@ make_others ()
    If the file does not exist the function returns 0. */
 
 static long
-file_modification_time (file_name)
-     char *file_name;
+file_modification_time (char *file_name)
 {
   struct stat buf;
   long modification_time;
@@ -1038,8 +1024,7 @@ signal_enable ()
    termination. */
 
 static void
-user_signal_action (sig)
-     int sig;
+user_signal_action (int sig)
 {
   if (signal_ignore)
     {
@@ -1055,8 +1040,7 @@ user_signal_action (sig)
    of the function. */
 
 static void
-set_user_signal_action (initiation_flag)
-     int initiation_flag;
+set_user_signal_action (int initiation_flag)
 {
   if (initiation_flag)
     {
@@ -1094,8 +1078,7 @@ set_floating_point_exception_action ()
    last C file whose generation has not been ended. */
 
 static void
-m2c_exit (code)
-     int code;
+m2c_exit (int code)
 {
   if (code != 0 && current_modula_output_file_name != NULL)
     {
@@ -1497,8 +1480,7 @@ static unsigned all_lines;
    file is a main module and picking names of imported modules is on.  */
 
 static int
-Modula_to_C (arg)
-     register int arg;
+Modula_to_C (register int arg)
 {
   char *name_without_suffix;
   register int okay;
@@ -1542,10 +1524,7 @@ Modula_to_C (arg)
    The function returns TRUE if the translation is successful. */
 
 static int
-C_compilation (after_modula, input_file_name, original_argument_number)
-     int after_modula;
-     char *input_file_name;
-     int original_argument_number;
+C_compilation (int after_modula, char *input_file_name, int original_argument_number)
 {
   VLS C_argument_vector;
   register int i, okay;
