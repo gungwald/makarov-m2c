@@ -5126,8 +5126,7 @@ finish_generation (code)
    if the generation is successful. */
 
 int
-generator (output_file_name)
-     char *output_file_name;
+generator (char *output_file_name)
 {
   ICN_pointer ref, scref;
 

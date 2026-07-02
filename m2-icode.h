@@ -36,6 +36,9 @@
    enumeration constants is important.  It is used in
    characteristics_node_table and ICPN_in_node_table. */
 
+#ifndef M2_ICODE_H
+#define M2_ICODE_H
+
 enum icode_node_mode
 {
   ICNM_INTEGER,
@@ -1300,7 +1303,7 @@ struct stdid
 
 /* Functions for work with icode. */
 
-extern struct stdid *find_stdid ();
+extern struct stdid *find_stdid (register char *str, register int length);
 
 extern unsigned int max_number_of_nodes;
 extern unsigned int current_number_of_nodes;
@@ -1309,25 +1312,25 @@ extern unsigned int current_number_of_bytes_for_nodes;
 
 extern void initiate_pool ();
 extern void free_pool ();
-extern void delete_node ();
-extern ICN_pointer create_node ();
-extern ICN_pointer create_node_with_string ();
+extern void delete_node (register ICN_pointer ref);
+extern ICN_pointer create_node (register enum icode_node_mode mode);
+extern ICN_pointer create_node_with_string (register enum icode_node_mode m, char *str, char **string_in_pool_ptr);
 extern ICN_pointer create_identifier_node ();
 extern ICN_pointer first_block_begin ();
 
-extern void initiate_table_and_environment ();
+extern void initiate_table_and_environment (register int i, register ICN_pointer ref);
 extern void delete_table ();
-extern ICN_pointer find_in_or_else_include_to_table ();
-extern ICN_pointer find_identifier ();
-extern ICN_pointer find_denotation ();
-extern ICN_pointer find_denotation_in_second_space ();
-extern void include_to_table ();
-extern ICN_pointer find_identifier_declaration_or_its_export_import ();
-extern ICN_pointer find_identifier_declaration ();
+extern ICN_pointer find_in_or_else_include_to_table (ICN_pointer ref);
+extern ICN_pointer find_identifier (char *string);
+extern ICN_pointer find_denotation (ICN_pointer scope, ICN_pointer identifier);
+extern ICN_pointer find_denotation_in_second_space (ICN_pointer scope, ICN_pointer identifier);
+extern void include_to_table (ICN_pointer ref);
+extern ICN_pointer find_identifier_declaration_or_its_export_import (register ICN_pointer scope, register ICN_pointer identifier);
+extern ICN_pointer find_identifier_declaration (register ICN_pointer scope, ICN_pointer identifier);
 
-extern int it_is_integer_type ();
-extern int it_is_cardinal_type ();
-extern int it_is_integer_cardinal_type ();
+extern int it_is_integer_type (register ICN_pointer ref);
+extern int it_is_cardinal_type (register ICN_pointer ref);
+extern int it_is_integer_cardinal_type (register ICN_pointer ref);
 extern int it_is_real_type ();
 extern int it_is_string_type ();
 extern int string_length_from_its_type ();
@@ -1350,3 +1353,5 @@ extern int subgraph_is_type ();
 extern int subgraph_is_expression ();
 
 extern void print_node ();
+
+#endif

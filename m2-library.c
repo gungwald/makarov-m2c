@@ -784,8 +784,7 @@ create_hash_table (size, hash_function, compare_function)
    table must already exist. */
 
 void
-delete_hash_table (htab)
-     hash_table htab;
+delete_hash_table (hash_table htab)
 {
   M2C_FREE (htab->entries);
   M2C_FREE (htab);
@@ -834,10 +833,7 @@ static int collisions = 0;
    occupancy is more than 75%. */
 
 hash_table_entry *
-find_hash_table_entry (htab, element, reserve)
-     register hash_table htab;
-     hash_table_entry element;
-     int reserve;
+find_hash_table_entry (register hash_table htab, hash_table_entry element, int reserve)
 {
   register hash_table_entry *entry_ptr;
   register unsigned hash_value;

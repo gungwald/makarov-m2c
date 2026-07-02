@@ -16,6 +16,6 @@
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
 
-extern int generator ();
+extern int generator (char *output_file_name);
 extern void create_block_structure_table ();
 extern void define_necessary_blocks ();

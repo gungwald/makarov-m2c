@@ -98,10 +98,10 @@ static int make_others ();
 static int Modula_to_C (register int arg);
 static int C_compilation (int after_modula, char *input_file_name, int original_argument_number);
 static int loading_by_C_compiler ();
-static int modula_analyzer ();
-static int create_icode_and_analyze_declarations ();
-static void create_icode_of_imported_definition_modules ();
-static void fatal_analyze_finish ();
+static int modula_analyzer (char *full_file_name, char *file_name_without_suffix);
+static int create_icode_and_analyze_declarations (char *full_file_name, char *error_message);
+static void create_icode_of_imported_definition_modules (ICN_pointer module_node_ptr);
+static void fatal_analyze_finish (int number_of_errors);
 
 /* Name of C file which is translation of current compiled module.  It may be
    temporary file depending on given command flags.  The memory for
@@ -1056,7 +1056,7 @@ set_user_signal_action (int initiation_flag)
 /* The following function is signal handler of floating point exception. */
 
 static void
-floating_point_exception_action ()
+floating_point_exception_action (int which_signal_occurred)
 {
   set_floating_point_exception_action ();
   error (ERR_floating_point_exception);
@@ -1096,8 +1096,7 @@ m2c_exit (int code)
    finishes the translator if the process is finished unsuccessfully. */
 
 static int
-wait_for_process_finish (pid)
-     register int pid;
+wait_for_process_finish (register int pid)
 {
   int status, signal;
 
@@ -1119,9 +1118,7 @@ wait_for_process_finish (pid)
    FILE_NAME is searched according to environment variable PATH. */
 
 static int
-new_process (file_name, process_arguments)
-     char *file_name;
-     register char **process_arguments;
+new_process (char *file_name, register char **process_arguments)
 {
   register int pid;
   register char **current_argument;
@@ -1155,9 +1152,7 @@ new_process (file_name, process_arguments)
    commentaries for them). */
 
 static int
-create_and_wait_for_process (file_name, process_arguments)
-     char *file_name;
-     register char *process_arguments[];
+create_and_wait_for_process (char *file_name, register char *process_arguments[])
 {
   return wait_for_process_finish (new_process (file_name, process_arguments));
 }
@@ -1243,8 +1238,7 @@ initiate_m2_libraries ()
    the function returns NULL. */
 
 static char *
-definition_module_library (module_name)
-     char *module_name;
+definition_module_library (char *module_name)
 {
   register char *library_name;
   register int next_library_number;
@@ -1310,10 +1304,8 @@ definition_module_library (module_name)
 */
 
 static void
-new_flag_presentation (arg, new_flag_name, new_parameter, flag_is_ordered,
-		       it_is_for_C_compilation)
-     char **new_flag_name, **new_parameter;
-     int arg, *flag_is_ordered, it_is_for_C_compilation;
+new_flag_presentation (int arg, char **new_flag_name, char **new_parameter,
+     int *flag_is_ordered, int it_is_for_C_compilation)
 {
   char *temp_copy_of_new_flag_name, *flag_name, *temp_flag_name_copy;
   int flag_length, flag_name_length, flag_has_separate_parameter;
@@ -1375,8 +1367,7 @@ static VLS presentations_of_ordered_flags;
    loading all object files by used C compiler. */
 
 static void
-set_up_presentations_of_ordered_flags (it_is_for_c_compilation)
-     int it_is_for_c_compilation;
+set_up_presentations_of_ordered_flags (int it_is_for_c_compilation)
 {
   register int argument_number;
   char *flag_name_presentation, *parameter_presentation;
@@ -1432,9 +1423,8 @@ delete_presentations_of_ordered_flags ()
    index of this element in PRESENTATIONS_OF_ORDERED_FLAGS. */
 
 static int
-add_ordered_flags_to_new_command_line (new_argument_vector, start, place_bound)
-     register VLS *new_argument_vector;
-     register int start, place_bound;
+add_ordered_flags_to_new_command_line (register VLS *new_argument_vector,
+     register int start, register int place_bound)
 {
   register struct ordered_flag_presentation *ordered_flag_presentation_ptr;
 
@@ -1606,7 +1596,7 @@ C_compilation (int after_modula, char *input_file_name, int original_argument_nu
   str = NULL;
   VLS_ADD_MEMORY (C_argument_vector, &str, sizeof (char *));
   okay = create_and_wait_for_process (C_COMPILER,
-				      VLS_BEGIN (C_argument_vector));
+				      (char **) VLS_BEGIN (C_argument_vector));
   if (okay && C_OUTPUT_EXISTS && after_modula && IS_MODULA_OUTPUT_TEMPORARY
       && !MAY_BE_C_NONSTANDARD_OBJECT)
     {
@@ -1737,7 +1727,7 @@ loading_by_C_compiler ()
   str = NULL;
   VLS_ADD_MEMORY (C_argument_vector, &str, sizeof (char *));
   all_right_after_loading
-    = create_and_wait_for_process (C_COMPILER, VLS_BEGIN (C_argument_vector));
+    = create_and_wait_for_process (C_COMPILER, (char **) VLS_BEGIN (C_argument_vector));
   signal_enable ();
   /* Free all dynamically allocated memory earlier for forming command line. */
   for (i = begin_of_nonordered_flags_for_loading;
@@ -1796,8 +1786,7 @@ static jmp_buf jump_for_fatal_error;
    definition module has not been processed yet. */
 
 static int
-modula_analyzer (full_file_name, file_name_without_suffix)
-     char *full_file_name, *file_name_without_suffix;
+modula_analyzer (char *full_file_name, char *file_name_without_suffix)
 {
   register ICN_pointer block_scope, block_begin_node_ptr;
   register char *module_name;
@@ -1857,8 +1846,7 @@ finish:
    commentaries for it). */
 
 static void
-fatal_analyze_finish (code)
-     int code;
+fatal_analyze_finish (int code)
 {
   longjmp (jump_for_fatal_error, TRUE);
 }
@@ -1875,8 +1863,7 @@ fatal_analyze_finish (code)
    processing the source file. */
 
 static int
-create_icode_and_analyze_declarations (full_file_name, error_message)
-     char *full_file_name, *error_message;
+create_icode_and_analyze_declarations (char *full_file_name, char *error_message)
 {
   register int repeat_flag;
 
@@ -1894,8 +1881,7 @@ create_icode_and_analyze_declarations (full_file_name, error_message)
       && !pass_of_picking_used_objects_when_all_flag)
     all_lines += current_line_number;
   if (!testing_main_module)
-    create_icode_of_imported_definition_modules
-      (current_compilation_unit, ERR_definition_module_absence);
+    create_icode_of_imported_definition_modules (current_compilation_unit);
   if (!testing_main_module && !picking_names_of_imported_modules)
     {
       /* semantics analyze of declarations. */
@@ -1914,8 +1900,7 @@ create_icode_and_analyze_declarations (full_file_name, error_message)
    testing that given file is a main module. */
 
 static void
-create_icode_of_imported_definition_modules (module_node_ptr)
-     ICN_pointer module_node_ptr;
+create_icode_of_imported_definition_modules (ICN_pointer module_node_ptr)
 {
   register ICN_pointer declaration_element;
   register ICN_pointer imported_module_identifier_node_ptr;

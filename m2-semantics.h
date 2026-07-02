@@ -16,8 +16,15 @@
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
 
-extern void process_export ();
-extern void process_import ();
-extern void process_statements ();
-extern void process_declarations ();
-extern void complete_processing_pointer_definitions ();
+#ifndef M2_SEMANTICS_H
+#define M2_SEMANTICS_H
+
+#include "m2-icode.h"
+
+extern void process_export (register ICN_pointer declaration);
+extern void process_import (register ICN_pointer declaration);
+extern void process_statements (register ICN_pointer statement);
+extern void process_declarations (ICN_pointer start);
+extern void complete_processing_pointer_definitions (register ICN_pointer declaration);
+
+#endif

@@ -2830,8 +2830,7 @@ create_implicit_export_or_import_nodes (export_import, original_export_import)
    nested export clauses. */
 
 void
-process_export (declaration)
-     register ICN_pointer declaration;
+process_export (register ICN_pointer declaration)
 {
   register ICN_pointer pred_declaration, next_declaration;
 
@@ -2871,8 +2870,7 @@ process_export (declaration)
    nested export clauses.  All export nodes are to be processed. */
 
 void
-process_import (declaration)
-     register ICN_pointer declaration;
+process_import (register ICN_pointer declaration)
 {
   register ICN_pointer identifier_after_current_from_clause, module_exporter;
 
@@ -2948,8 +2946,7 @@ static int it_is_in_loop;
    statement node (or NULL). */
 
 void
-process_statements (statement)
-     register ICN_pointer statement;
+process_statements (register ICN_pointer statement)
 {
   register ICN_pointer saved_current_scope;
   int error_was_fixed, saved_it_is_in_loop;
@@ -3256,8 +3253,7 @@ process_statements (statement)
    processed. */
 
 void
-process_declarations (start)
-     ICN_pointer start;
+process_declarations (ICN_pointer start)
 {
   char *declaration_name;
   register enum icode_node_mode declaration_element_mode;
@@ -3442,8 +3438,7 @@ process_declarations (start)
    definitions. */
 
 void
-complete_processing_pointer_definitions (declaration)
-     register ICN_pointer declaration;
+complete_processing_pointer_definitions (register ICN_pointer declaration)
 {
   register enum icode_node_mode mode;
   register ICN_pointer declaration_type, current_type, pointer_base_type;

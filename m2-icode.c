@@ -752,9 +752,7 @@ static ICN_pointer nodes_for_hash_table[] =
    Fast search is implemented by minimal pruned O-trie forest. */
 
 struct stdid *
-find_stdid (str, length)
-     register char *str;
-     register int length;
+find_stdid (register char *str, register int length)
 {
   switch (length)
     {
@@ -1301,8 +1299,7 @@ free_pool ()
    members in nodes are set up by this way. */
 
 static ICN_pointer
-allocate_icode (size)
-     register unsigned int size;
+allocate_icode (register unsigned int size)
 {
   register char *str;
   register ICN_pointer ref;
@@ -1342,9 +1339,7 @@ allocate_icode (size)
    does not contain other nodes it is freed. */
 
 static void
-icode_free (ref, size)
-     register char *ref;
-     register unsigned int size;
+icode_free (register char *ref, register unsigned int size)
 {
   register struct segment *next_segment;
 
@@ -1368,8 +1363,7 @@ icode_free (ref, size)
    mode and line. */
 
 ICN_pointer
-create_node (mode)
-     register enum icode_node_mode mode;
+create_node (register enum icode_node_mode mode)
 {
   register ICN_pointer ref;
 
@@ -1389,9 +1383,7 @@ create_node (mode)
    attribute are string, identifier an C code. */
 
 ICN_pointer
-create_node_with_string (m, str, string_in_pool_ptr)
-     register enum icode_node_mode m;
-     char *str, **string_in_pool_ptr;
+create_node_with_string (register enum icode_node_mode m, char *str, char **string_in_pool_ptr)
 {
   register ICN_pointer ref;
 
@@ -1428,8 +1420,7 @@ create_identifier_node (str)
 /* Return string attribute in pool for given node. */
 
 static char *
-get_string_attribute (ref)
-     register ICN_pointer ref;
+get_string_attribute (register ICN_pointer ref)
 {
   register enum icode_node_mode mode;
 
@@ -1447,8 +1438,7 @@ get_string_attribute (ref)
 /* Delete given node. */
 
 void
-delete_node (ref)
-     register ICN_pointer ref;
+delete_node (register ICN_pointer ref)
 {
   register char *str;
 
@@ -1534,8 +1524,7 @@ static hash_table node_hash_table;
    It may represent node in the second or major name spaces. */
 
 static unsigned
-hash_function (el_ptr)
-     hash_table_entry el_ptr;
+hash_function (hash_table_entry el_ptr)
 {
   register ICN_pointer node_ref;
   register enum icode_node_mode mode;
@@ -1598,8 +1587,7 @@ hash_function (el_ptr)
    Return TRUE if the elements represent equal nodes in the same name space. */
 
 static int
-compare_function (el1_ptr, el2_ptr)
-     hash_table_entry el1_ptr, el2_ptr;
+compare_function (hash_table_entry el1_ptr, hash_table_entry el2_ptr)
 {
   register ICN_pointer node_ref1, node_ref2;
   register enum icode_node_mode mode1, mode2;
@@ -1666,11 +1654,8 @@ compare_function (el1_ptr, el2_ptr)
    environment). */
 
 void
-initiate_table_and_environment ()
+initiate_table_and_environment (register int i, register ICN_pointer ref)
 {
-  register int i;
-  register ICN_pointer ref;
-
   /* The following icode real nodes are initiated here because maximum and
      minimum real values in the file float.h may be not C constant expression
      (see ANSI standard of C language). */
@@ -1726,9 +1711,7 @@ delete_table ()
    REF. */
 
 static ICN_pointer *
-find_table_entry (ref, reserve)
-     register ICN_pointer ref;
-     int reserve;
+find_table_entry (register ICN_pointer ref, int reserve)
 {
   return
     (ICN_pointer *) find_hash_table_entry (node_hash_table,
@@ -1740,9 +1723,7 @@ find_table_entry (ref, reserve)
    determines calling function).  */
 
 static ICN_pointer
-find_include (ref, flag_of_change)
-     register ICN_pointer ref;
-     int flag_of_change;
+find_include (register ICN_pointer ref, int flag_of_change)
 {
   register ICN_pointer *table_entry_pointer, ref_in_second_space;
   enum icode_node_mode mode;
@@ -1771,8 +1752,7 @@ find_include (ref, flag_of_change)
    in the table. */
 
 ICN_pointer
-find_in_or_else_include_to_table (ref)
-     ICN_pointer ref;
+find_in_or_else_include_to_table (ICN_pointer ref)
 {
   return find_include (ref, FALSE);
 }
@@ -1783,8 +1763,7 @@ find_in_or_else_include_to_table (ref)
    starting with REF to the table. */
 
 void
-include_to_table (ref)
-     ICN_pointer ref;
+include_to_table (ICN_pointer ref)
 {
   find_include (ref, TRUE);
 }
@@ -1793,8 +1772,7 @@ include_to_table (ref)
 /* Return pointer to identifier node with the hash table key STRING. */
 
 ICN_pointer
-find_identifier (string)
-     char *string;
+find_identifier (char *string)
 {
   identifier_node identifier;
   register ICN_pointer result;
@@ -1810,9 +1788,7 @@ find_identifier (string)
    determines calling function).  */
 
 static ICN_pointer
-find (scope, identifier, search_is_in_second_space)
-     ICN_pointer scope, identifier;
-     int search_is_in_second_space;
+find (ICN_pointer scope, ICN_pointer identifier, int search_is_in_second_space)
 {
   variable_declaration_node var;
   register ICN_pointer ref, r;
@@ -1831,8 +1807,7 @@ find (scope, identifier, search_is_in_second_space)
    The search is executed in the major name space. */
 
 ICN_pointer
-find_denotation (scope, identifier)
-     ICN_pointer scope, identifier;
+find_denotation (ICN_pointer scope, ICN_pointer identifier)
 {
   return find (scope, identifier, FALSE);
 }
@@ -1843,8 +1818,7 @@ find_denotation (scope, identifier)
    not found. */
 
 ICN_pointer
-find_denotation_in_second_space (scope, identifier)
-     ICN_pointer scope, identifier;
+find_denotation_in_second_space (ICN_pointer scope, ICN_pointer identifier)
 {
   return find (scope, identifier, TRUE);
 }
@@ -1857,8 +1831,7 @@ find_denotation_in_second_space (scope, identifier)
    declaration is not found. */
 
 ICN_pointer
-find_identifier_declaration_or_its_export_import (scope, identifier)
-     register ICN_pointer scope, identifier;
+find_identifier_declaration_or_its_export_import (register ICN_pointer scope, register ICN_pointer identifier)
 {
   register ICN_pointer ref, upper_identifier;
   register int flag_of_standard_identifier;
@@ -1907,9 +1880,7 @@ find_identifier_declaration_or_its_export_import (scope, identifier)
    C function node may be created. */
 
 ICN_pointer
-find_identifier_declaration (scope, identifier)
-     register ICN_pointer scope;
-     ICN_pointer identifier;
+find_identifier_declaration (register ICN_pointer scope, ICN_pointer identifier)
 {
   int export_was_last;
   register ICN_pointer ref, module_after_from_clause;
@@ -1976,8 +1947,7 @@ find_identifier_declaration (scope, identifier)
    any integer type. */
 
 int
-it_is_integer_type (ref)
-     register ICN_pointer ref;
+it_is_integer_type (register ICN_pointer ref)
 {
   return (ref == ICN_POINTER (&ICN_TD_short_integer)
 	  || ref == ICN_POINTER (&ICN_TD_integer)
@@ -1989,8 +1959,7 @@ it_is_integer_type (ref)
    any cardinal type. */
 
 int
-it_is_cardinal_type (ref)
-     register ICN_pointer ref;
+it_is_cardinal_type (register ICN_pointer ref)
 {
   return (ref == ICN_POINTER (&ICN_TD_short_cardinal)
 	  || ref == ICN_POINTER (&ICN_TD_cardinal)
@@ -2002,8 +1971,7 @@ it_is_cardinal_type (ref)
    any type suitable for integer and cardinal value. */
 
 int
-it_is_integer_cardinal_type (ref)
-     register ICN_pointer ref;
+it_is_integer_cardinal_type (register ICN_pointer ref)
 {
   return (ref == ICN_POINTER (&ICN_TD_short_cardinal_or_integer)
 	  || ref == ICN_POINTER (&ICN_TD_cardinal_or_integer)
@@ -2015,8 +1983,7 @@ it_is_integer_cardinal_type (ref)
    any real type. */
 
 int
-it_is_real_type (ref)
-     register ICN_pointer ref;
+it_is_real_type (register ICN_pointer ref)
 {
   return (ref == ICN_POINTER (&ICN_TD_short_real)
 	  || ref == ICN_POINTER (&ICN_TD_real)

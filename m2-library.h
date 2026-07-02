@@ -94,7 +94,7 @@ typedef struct
 #define VLS_NULLIFY(vls) ((vls).vls_free=(vls).vls_start)
 
 
-/* Length of memory allocated for VLS becames equal to VLS length. */
+/* Length of memory allocated for VLS becomes equal to VLS length. */
 
 #define VLS_TAILOR(vls) VLS_tailor_function(&vls)
 
@@ -194,14 +194,14 @@ typedef struct
 
   /* Pointer to function for evaluation of hash value (any unsigned value).
      This function has one parameter with type hash_table_entry. */
-  unsigned (*hash_function) ();
+  unsigned (*hash_function) (hash_table_entry el_ptr);
 
   /* Pointer to function for comparison of hash table elements (two parameter
      with type hash_table_entry). */
-  int (*compare_function) ();
+  int (*compare_function) (hash_table_entry el1_ptr, hash_table_entry el2_ptr);
   hash_table_entry *entries;	/* table itself */
 } *hash_table;
 
 extern hash_table create_hash_table ();
-extern void delete_hash_table ();
-extern hash_table_entry *find_hash_table_entry ();
+extern void delete_hash_table (hash_table htab);
+extern hash_table_entry *find_hash_table_entry (register hash_table htab, hash_table_entry element, int reserve);
