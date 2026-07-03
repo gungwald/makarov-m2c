@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License along
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef PYRAMID_GCC_H
+#define PYRAMID_GCC_H
 
 #include "pyramid.h"
 #include "gcc.h"
@@ -57,3 +59,4 @@
    previous macros (if it is defined). */
 
 /*#define MAKING_MORE_PRECISE_ALIGN_BY_TYPE(align,icode_ptr) */
+#endif // PYRAMID_GCC_H

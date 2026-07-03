@@ -27,6 +27,8 @@
    character `-' and finishes by character `''.  The flag suffix may be starts
    with white spaces.  It means that the corresponding flag has
    obligatory flag parameter. */
+#ifndef PCC_H
+#define PCC_H
 
 #define OPTIONS "string name name=def dir x letter output [p012] %%\
 `-3' Support 3rd edition of Wirth's book (implicitly the 4th edition).\n\
@@ -191,3 +193,4 @@
 /* The following file is to be included here! */
 
 #include "common_part.h"
+#endif // PCC_H

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/AGENTS.md">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/AGENTS.md" />
+              <option name="updatedContent" value="# AGENTS.md&#10;&#10;## Big Picture&#10;- This repository is **M2C**, a Modula-2 to C translator; pipeline is scanner -&gt; parser -&gt; semantics -&gt; generator -&gt; C output (`README`, `m2-main.c`).&#10;- The compiler executable is `m2c`; runtime support is archived as `m2lib.a` from `m2l_*.c` (`Makefile`).&#10;- Core boundaries are file-based by phase: `m2-scanner.*`, `m2-syntax.*`, `m2-semantics.*`, `m2-generator.*`, with shared IR/state in `m2-icode.*` and `m2-common.h`.&#10;&#10;## Key Directories and Files&#10;- Compiler driver and mode orchestration: `m2-main.c`.&#10;- Shared compiler data and macros: `m2-common.h`, `m2-config.h`.&#10;- Intermediate representation node modes (`ICNM_*`): `m2-icode.h`.&#10;- Platform/config headers and suffix defaults (`.def`, `.mod`, `.o`): `config/`, especially `config/common_part.h`.&#10;- Language tests are under `m2-tests/`; naming follows report sections (see `m2-tests/README`).&#10;&#10;## Build and Run Workflow&#10;- Build everything:&#10;  ```bash&#10;  make&#10;  ```&#10;- Clean build artifacts:&#10;  ```bash&#10;  make clean&#10;  ```&#10;- Install (target exists in `Makefile`):&#10;  ```bash&#10;  make install&#10;  ```&#10;- Compile a module with verbose output:&#10;  ```bash&#10;  ./m2c -v path/to/file.mod&#10;  ```&#10;&#10;## Compiler Modes Agents Should Know&#10;- `-all`: full-program mode with dependency-aware analysis/generation.&#10;- `-make`: incremental dependency rebuild behavior.&#10;- `-MAKE`: emit make-style dependency rules.&#10;- `-C`: generate C only (skip C compilation/linking stage).&#10;- `-update`: timestamp-based recompilation decisions.&#10;- `-strict` and `-3`: stricter language compatibility modes.&#10;&#10;## Project Conventions (Non-Generic)&#10;- Module naming is consistent and meaningful: compiler phase files use `m2-*.c/.h`; runtime helpers use `m2l_*.c`.&#10;- Standard library modules are paired `.def`/`.mod` files in repo root (for example `String.def` + `String.mod`).&#10;- Parser/scanner token and stop-symbol handling is centralized in scanner/syntax headers; follow existing enums/macros rather than ad hoc literals (`m2-scanner.h`, `m2-syntax.h`).&#10;- Memory/dynamic buffers rely on project macros (`M2C_ALLOC`/`M2C_FREE`, VLS helpers); preserve these patterns instead of mixing raw allocation styles.&#10;- Driver behavior is flag-heavy with static global option state in `m2-main.c`; new options should align with that model.&#10;&#10;## Integration Notes&#10;- External toolchain dependency is the host C compiler/linker invoked after C generation; `m2c` may stop early with `-C`.&#10;- Dependency and import ordering matter: definition modules must be discoverable before implementation modules in multi-module builds.&#10;- When debugging cross-phase issues, start at `m2-main.c` mode path, then trace phase handoff (`scanner -&gt; syntax -&gt; semantics -&gt; generator`).&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

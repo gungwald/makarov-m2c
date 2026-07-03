@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License along
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef VAX_PCC_H
+#define VAX_PCC_H
 
 #include "vax.h"
 #include "pcc.h"
@@ -46,3 +48,4 @@
 
 /*#define MAKING_MORE_PRECISE_ALIGN_BY_TYPE(align,icode_ptr) */
 
+#endif // VAX_PCC_H

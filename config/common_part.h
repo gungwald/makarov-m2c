@@ -20,6 +20,8 @@
 /* Suffixes of implementation (main) module file and definition module file
    must be different.  Suffixes of implementation module and main module files
    can be the same. */
+#ifndef COMMON_PART_H
+#define COMMON_PART_H
 
 #define DEFINITION_MODULE_SUFFIX ".def"
 #define IMPLEMENTATION_MODULE_SUFFIX ".mod"
@@ -107,3 +109,4 @@ typedef unsigned long long Tcard;
 typedef long long Tint;
 typedef double Treal;
 typedef unsigned int Tset;
+#endif // COMMON_PART_H

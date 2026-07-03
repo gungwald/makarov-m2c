@@ -15,6 +15,9 @@
  * You should have received a copy of the GNU General Public License along
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef M2_TYPE_SIZE_H
+#define M2_TYPE_SIZE_H
 
 extern Tcard array_index_span ();
 extern void get_type_size_and_alignment ();
+#endif // M2_TYPE_SIZE_H

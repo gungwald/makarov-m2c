@@ -17,6 +17,8 @@
  */
 
 /* Fatal errors, i.e. the errors result in immediate translator finish. */
+#ifndef M2_ERRORS_H
+#define M2_ERRORS_H
 
 extern char ERR_no_memory[];
 extern char ERR_many_errors[];
@@ -224,3 +226,4 @@ extern void error_with_parameter (register char *err, register char *par);
 
 /* Macros is defined for convenience of fixing errors without parameters. */
 #define error(err) error_with_parameter(err,0)
+#endif // M2_ERRORS_H

@@ -18,6 +18,8 @@
 
 /* All dynamic memory is allocated and freed with the aid of
    the following macros. */
+#ifndef M2_LIBRARY_H
+#define M2_LIBRARY_H
 
 #define M2C_ALLOC(str,size) (((str)=malloc(size))?(str)\
                              :(error(ERR_no_memory),((char *)0)))
@@ -205,3 +207,4 @@ typedef struct
 extern hash_table create_hash_table ();
 extern void delete_hash_table (hash_table htab);
 extern hash_table_entry *find_hash_table_entry (register hash_table htab, hash_table_entry element, int reserve);
+#endif // M2_LIBRARY_H

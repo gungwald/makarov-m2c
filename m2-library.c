@@ -797,8 +797,7 @@ delete_hash_table (hash_table htab)
    the place of the table entries is changed. */
 
 static void
-expand_hash_table (htab)
-     hash_table htab;
+expand_hash_table(hash_table htab)
 {
   register hash_table new_htab;
   register hash_table_entry *entry_ptr, *new_entry_ptr;

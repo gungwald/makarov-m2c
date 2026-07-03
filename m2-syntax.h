@@ -15,6 +15,9 @@
  * You should have received a copy of the GNU General Public License along
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef M2_SYNTAX_H
+#define M2_SYNTAX_H
 
 extern void initiate_analyzer_data ();
 extern int compilation_unit ();
+#endif // M2_SYNTAX_H

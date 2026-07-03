@@ -21,9 +21,9 @@
 #include "m2-syntax.h"
 
 static ICN_pointer expression ();
-static ICN_pointer rest_of_designator ();
+static ICN_pointer rest_of_designator (ICN_pointer first_designator_identifier_ptr);
 static ICN_pointer simple_type ();
-static ICN_pointer field_list_sequence ();
+static ICN_pointer field_list_sequence (ICN_pointer head);
 static void optional_priority ();
 static void procedure_heading ();
 static void import_list ();
@@ -213,8 +213,7 @@ designator ()
 /* rest_of_designator = {"." IDENTIFIER | "[" {expression/","} "]" | "^"} */
 
 static ICN_pointer
-rest_of_designator (first_designator_identifier_ptr)
-     ICN_pointer first_designator_identifier_ptr;
+rest_of_designator(ICN_pointer first_designator_identifier_ptr)
 {
   register ICN_pointer designator_ptr, operation_ptr;
 
@@ -1059,8 +1058,7 @@ create_and_include_declaration_node (mode, in_definition_module,
    and sets up member opaque_type equal to IT_IS_OPAQUE_TYPE. */
 
 static void
-create_and_include_qualified_export_node (it_is_opaque_type)
-     int it_is_opaque_type;
+create_and_include_qualified_export_node(int it_is_opaque_type)
 {
   register ICN_pointer node_ptr;
 
@@ -1348,8 +1346,7 @@ new_field_or_case_part_node (first_field_ptr, pred_field_ptr, added_node, head)
  */
 
 static ICN_pointer
-field_list_sequence (head)
-     ICN_pointer head;
+field_list_sequence(ICN_pointer head)
 {
   int tag_is_present, presense_flag;
   register ICN_pointer current_field_or_case_part, case_variant_node_ptr;
@@ -1626,8 +1623,7 @@ variable_declaration_list ()
    scope than error ERR is fixed. */
 
 static void
-test_identifier_after_block (err)
-     char *err;
+test_identifier_after_block(char* err)
 {
   if (current_symbol == SYMBOL_IDENTIFIER
       && IDENTIFIER (current_scope) != NULL

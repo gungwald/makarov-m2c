@@ -107,9 +107,7 @@ static struct control_test_parameters r1_type_test_parameters =
    generic_semantic_test (see commentaries for it). */
 
 static int
-r1_type_test_with_error_parameter (error_message, error_parameter)
-     char *error_message;
-     char *error_parameter;
+r1_type_test_with_error_parameter(char* error_message, char* error_parameter)
 {
   return generic_semantic_test (error_message, error_parameter,
 				&r1_type_test_parameters);
@@ -123,9 +121,7 @@ static struct control_test_parameters r2_type_test_parameters =
 {&r2, &sinf2, subgraph_is_type, FALSE, FALSE, FALSE};
 
 static int
-r2_type_test_with_error_parameter (error_message, error_parameter)
-     char *error_message;
-     char *error_parameter;
+r2_type_test_with_error_parameter(char* error_message, char* error_parameter)
 {
   return generic_semantic_test (error_message, error_parameter,
 				&r2_type_test_parameters);
@@ -153,9 +149,7 @@ static struct control_test_parameters r1_expression_test_parameters =
    generic_semantic_test (see commentaries for it). */
 
 static int
-r1_expression_test_with_error_parameter (error_message, error_parameter)
-     char *error_message;
-     char *error_parameter;
+r1_expression_test_with_error_parameter(char* error_message, char* error_parameter)
 {
   return generic_semantic_test (error_message, error_parameter,
 				&r1_expression_test_parameters);
@@ -169,9 +163,7 @@ static struct control_test_parameters r2_expression_test_parameters =
 {&r2, &sinf2, subgraph_is_expression, TRUE, FALSE, FALSE};
 
 static int
-r2_expression_test_with_error_parameter (error_message, error_parameter)
-     char *error_message;
-     char *error_parameter;
+r2_expression_test_with_error_parameter(char* error_message, char* error_parameter)
 {
   return generic_semantic_test (error_message, error_parameter,
 				&r2_expression_test_parameters);
@@ -199,9 +191,7 @@ static struct control_test_parameters r1_variable_test_parameters =
    generic_semantic_test (see commentaries for it). */
 
 static int
-r1_variable_test_with_error_parameter (error_message, error_parameter)
-     char *error_message;
-     char *error_parameter;
+r1_variable_test_with_error_parameter(char* error_message, char* error_parameter)
 {
   return generic_semantic_test (error_message, error_parameter,
 				&r1_variable_test_parameters);
@@ -215,9 +205,7 @@ static struct control_test_parameters r2_variable_test_parameters =
 {&r2, &sinf2, subgraph_is_expression, TRUE, TRUE, FALSE};
 
 int
-r2_variable_test_with_error_parameter (error_message, error_parameter)
-     char *error_message;
-     char *error_parameter;
+r2_variable_test_with_error_parameter(char* error_message, char* error_parameter)
 {
   return generic_semantic_test (error_message, error_parameter,
 				&r2_variable_test_parameters);
@@ -245,9 +233,7 @@ static struct control_test_parameters r1_constant_test_parameters =
    generic_semantic_test (see commentaries for it). */
 
 static int
-r1_constant_test_with_error_parameter (error_message, error_parameter)
-     char *error_message;
-     char *error_parameter;
+r1_constant_test_with_error_parameter(char* error_message, char* error_parameter)
 {
   return generic_semantic_test (error_message, error_parameter,
 				&r1_constant_test_parameters);
@@ -261,9 +247,7 @@ static struct control_test_parameters r2_constant_test_parameters =
 {&r2, &sinf2, subgraph_is_expression, TRUE, FALSE, TRUE};
 
 static int
-r2_constant_test_with_error_parameter (error_message, error_parameter)
-     char *error_message;
-     char *error_parameter;
+r2_constant_test_with_error_parameter(char* error_message, char* error_parameter)
 {
   return generic_semantic_test (error_message, error_parameter,
 				&r2_constant_test_parameters);
@@ -355,8 +339,7 @@ test_discrete_inclusion (value, type)
    The scalar type is any basic type or any enumeration type. */
 
 static int
-it_is_scalar_type (icode_ptr)
-     ICN_pointer icode_ptr;
+it_is_scalar_type(ICN_pointer icode_ptr)
 {
   return it_is_discrete_type (icode_ptr) || it_is_real_type (icode_ptr);
 }
@@ -397,8 +380,7 @@ it_is_local_or_standard_procedure (object)
    with integer-cardinal type). */
 
 static ICN_pointer
-integer_value_from_integer_cardinal_value (value_ptr)
-     ICN_pointer value_ptr;
+integer_value_from_integer_cardinal_value(ICN_pointer value_ptr)
 {
   register ICN_pointer new_value_ptr;
 
@@ -415,8 +397,7 @@ integer_value_from_integer_cardinal_value (value_ptr)
    with integer-cardinal type). */
 
 static ICN_pointer
-cardinal_value_from_integer_cardinal_value (value_ptr)
-     ICN_pointer value_ptr;
+cardinal_value_from_integer_cardinal_value(ICN_pointer value_ptr)
 {
   register ICN_pointer new_value_ptr;
 
@@ -433,8 +414,7 @@ cardinal_value_from_integer_cardinal_value (value_ptr)
    single string value, i.e. character). */
 
 static ICN_pointer
-character_value_from_single_character_string (value_ptr)
-     ICN_pointer value_ptr;
+character_value_from_single_character_string(ICN_pointer value_ptr)
 {
   register ICN_pointer new_value_ptr;
 

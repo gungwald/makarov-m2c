@@ -396,6 +396,7 @@ static char range_test_function_name_prefix[] = "test";
    will generate the following code
      struct par_p_m {struct {char *adr; unsigned int high;} _a;};
      ...
+int
      main ()
      {
        struct par_p_m par_p_m;
@@ -443,6 +444,7 @@ static char actual_name_prefix[] = "temp_actual";
      static int _f_m (par, result)
        register struct par_f_m *par; char result[013];
      {...}
+int
      main ()
      {
        ...
@@ -734,9 +736,7 @@ void add_pointer_member_name (icode_ptr)
    EXPR is to represent expression. */
 
 static void
-generate_expression_according_to_flags (expr, flags)
-     ICN_pointer expr;
-     int flags;
+generate_expression_according_to_flags(ICN_pointer expr, int flags)
 {
   register int right_bracket_is_needed, address_as_cardinal_flag;
   register int through_struct_pointer_flag, address_flag, character_flag;
@@ -891,8 +891,7 @@ declaration_level_scope (denotation)
    denotation. */
 
 static int
-declaration_level_scope_has_variable_declarations (scope)
-     ICN_pointer scope;
+declaration_level_scope_has_variable_declarations(ICN_pointer scope)
 {
   register ICN_pointer declaration_element;
 
@@ -927,8 +926,7 @@ next_variable_declaration (scope, start)
    compilation unit.  PROCEDURE_PTR is to refer procedure node. */
 
 static int
-procedure_is_exported_from_compilation_unit (procedure_ptr)
-     ICN_pointer procedure_ptr;
+procedure_is_exported_from_compilation_unit(ICN_pointer procedure_ptr)
 {
   if (MODE (procedure_ptr) != ICNM_PROCEDURE)
     abort ();
@@ -1119,8 +1117,7 @@ generate_field_access (record_element)
    generation. */
 
 static void
-output_string_when_statements_generation (string)
-     char *string;
+output_string_when_statements_generation(char* string)
 {
   if (it_is_statements_generation_pass)
     {
@@ -1376,10 +1373,7 @@ generate_declaration_by_name (type, indirection_flag, name, name_index)
    declaration or to non-local module. */
 
 static void
-generate_declaration_by_object (type, indirection_flag, object)
-     ICN_pointer type;
-     int indirection_flag;
-     ICN_pointer object;
+generate_declaration_by_object(ICN_pointer type, int indirection_flag, ICN_pointer object)
 {
   output_type_definition_part (type, (indirection_flag ? 1 : 0), TRUE);
   if (fputc (' ', output_file) == EOF)
@@ -1512,8 +1506,7 @@ generate_field_declarations (record_element)
 
 static
 void
-output_formal_parameter_type_name (formal_parameter_type)
-     ICN_pointer formal_parameter_type;
+output_formal_parameter_type_name(ICN_pointer formal_parameter_type)
 {
   if (MODE (formal_parameter_type) != ICNM_FORMAL_PARAMETER)
     {
@@ -1740,8 +1733,7 @@ it_has_nested_procedures (denotation)
    module (originally only compilation unit). */
 
 static void
-generate_variable_declarations_of_local_modules (scope)
-     ICN_pointer scope;
+generate_variable_declarations_of_local_modules(ICN_pointer scope)
 {
   register ICN_pointer local_module, variable;
 
@@ -4295,8 +4287,7 @@ generate_local_module_blocks (module_or_procedure)
    once more (the body will be executed only once in any case). */
 
 static void
-generate_imported_compilation_unit_calls (compilation_unit)
-     ICN_pointer compilation_unit;
+generate_imported_compilation_unit_calls(ICN_pointer compilation_unit)
 {
   register ICN_pointer imported_module, declaration_element;
   register ICN_pointer pred_imported_module, imported_module_identifier;
@@ -4618,568 +4609,3 @@ generate_block (module_or_procedure)
    MODULE_OR_PROCEDURE is to refer to any module or procedure. */
 
 static void
-execute_string_constants_declarations_generation_pass (module_or_procedure)
-     ICN_pointer module_or_procedure;
-{
-  register ICN_pointer local_module;
-
-  if (!block_code_may_be_used (module_or_procedure))
-    return;
-  for (local_module = LOCAL_MODULE_LIST (module_or_procedure);
-       local_module != NULL;
-       local_module = MODULE_NODE (local_module)->module_brother)
-    execute_string_constants_declarations_generation_pass (local_module);
-  actuals_structures_declaration_generation_is_needed = FALSE;
-  temp_array_actuals_structures_declaration_generation_is_needed = FALSE;
-  temporary_variables_declaration_generation_is_needed = FALSE;
-  execute_pass (module_or_procedure,
-		STRING_CONSTANTS_DECLARATIONS_GENERATION_PASS);
-}
-
-
-
-/* This page contains functions which are needed for generation with
-   flag `-all'. */
-
-
-/* The function places unique name of OBJECT in *UNIQUE_NAME.  The unique
-   name is object identifier, scope, upper scope, ... and compilation unit
-   identifier separated by dot.  OBJECT is to refer to denotation (or NULL).
-   */
-
-static void
-make_unique_object_name (unique_name, object)
-     register VLS *unique_name;
-     ICN_pointer object;
-{
-  VLS_ADD_CHAR (*unique_name, '\0');
-  for (; object != NULL; object = SCOPE (object))
-    {
-      object = declaration_level_scope (object);
-      VLS_ADD_STRING
-	(*unique_name,
-	 IDENTIFIER_NODE (IDENTIFIER (object))->identifier_string);
-      if (SCOPE (object) != NULL)
-	VLS_ADD_STRING (*unique_name, ".");
-    }
-}
-
-/* The following structure contains a reference to block. */
-
-struct block_link
-{
-  struct block_link *next_block_link;
-  struct block_structure *block;
-};
-
-/* The following structure contains information about references to blocks
-   from given block.  The structure does not exist for local modules (although
-   the local modules are processed by set_current_block_structure and
-   insert_block_link calls).  Because necessity of local module code is
-   determined only by the necessity of code of procedure or compilation unit
-   which contains the local module. */
-
-struct block_structure
-{
-  /* TRUE if block code must be present in executable program (i.e. the
-     block is achievable through references to blocks from the blocks
-     of compilation units. */
-  char block_may_be_used;
-  /* Unique name of block (see commentaries for make_unique_object_name. */
-  char *block_name;
-  /* Pointer to first structure containing a reference to block from
-     given block. */
-  struct block_link *first_block_link;
-};
-
-/* The hash table of block structures.  The key is block_name. */
-
-static hash_table block_structure_table;
-
-/* The hash function for block_structure_table (see commentaries for
-   hash_table). */
-
-static unsigned
-hash_function (el_ptr)
-     hash_table_entry el_ptr;
-{
-  register char *block_name;
-  register unsigned hash_value, block_name_length, i;
-
-  block_name = ((struct block_structure *) el_ptr)->block_name;
-  block_name_length = strlen (block_name);
-  hash_value = 0;
-  for (i = 0; i < block_name_length; i++, block_name++)
-    hash_value += (*block_name);
-  return hash_value;
-}
-
-/* The compare function for block_structure_table (see commentaries for
-   hash_table). */
-
-static int
-compare_function (el1_ptr, el2_ptr)
-     hash_table_entry *el1_ptr, *el2_ptr;
-{
-  return !strcmp (((struct block_structure *) el1_ptr)->block_name,
-		  ((struct block_structure *) el2_ptr)->block_name);
-}
-
-/* Create and initiate block_structure_table (see commentaries for
-   create_hash_table). */
-
-void
-create_block_structure_table ()
-{
-  block_structure_table = create_hash_table (1000, hash_function,
-					     compare_function);
-}
-
-/* The function returns hash table entry which contains pointer to
-   block_structure with BLOCK_NAME.  If the pointer is NULL then such
-   block_structure does not exist.  In this case the entry is reserved
-   for insertion pointer to such block_structure if RESERVATION_IS_NEEDED is
-   TRUE (see also commentaries for find_hash_table_entry). */
-
-static struct block_structure **
-find_block_structure_table_entry (block_name, reservation_is_needed)
-     char *block_name;
-     int reservation_is_needed;
-{
-  struct block_structure block_structure;
-
-  block_structure.block_name = block_name;
-  return ((struct block_structure **)
-	  find_hash_table_entry (block_structure_table,
-				 (hash_table_entry) & block_structure,
-				 reservation_is_needed));
-}
-
-/* The variable contains pointer to block_structure corresponding to the
-   block being processed (if the block being processed is local module than
-   more exactly to procedure or compilation unit containing the local module).
-   Remember that block_structure does not exist for local modules.  Because
-   necessity of local module code is determined only by the necessity of code
-   of procedure or compilation unit which contains the local module. */
-
-static struct block_structure *current_block_structure;
-
-/* The functions set up current_block_structure (see commentaries upper) for
-   BLOCK.  If the corresponding current_block_structure does not
-   exist it is created. BLOCK is to refer to any module or
-   procedure. */
-
-static void
-set_current_block_structure (block)
-     ICN_pointer block;
-{
-  register struct block_structure **entry_ptr;
-  register char *block_structure_memory;
-  VLS unique_name;
-
-  block = declaration_level_scope (block);
-  VLS_CREATE (unique_name, 100);
-  make_unique_object_name (&unique_name, block);
-  entry_ptr = find_block_structure_table_entry (VLS_BEGIN (unique_name), TRUE);
-  if (*entry_ptr == NULL)
-    {
-      M2C_ALLOC (block_structure_memory, sizeof (**entry_ptr));
-      *entry_ptr = (struct block_structure *) block_structure_memory;
-      (*entry_ptr)->first_block_link = NULL;
-      M2C_ALLOC ((*entry_ptr)->block_name, VLS_LENGTH (unique_name));
-      strcpy ((*entry_ptr)->block_name, VLS_BEGIN (unique_name));
-      (*entry_ptr)->block_may_be_used = SCOPE (block) == NULL;
-    }
-  VLS_DELETE (unique_name);
-  current_block_structure = (*entry_ptr);
-}
-
-/* The function inserts block_link from the current block (i.e block
-   corresponding to current_block_structure) to block BLOCK (if block BLOCK is
-   local module than more exactly to procedure or compilation unit containing
-   the local module).  BLOCK is to refer to any module or procedure. */
-
-static void
-insert_block_link (block)
-     ICN_pointer block;
-{
-  register struct block_structure **entry_ptr;
-  VLS unique_name;
-  struct block_link *block_link_ptr;
-  char *block_structure_memory;
-
-  block = declaration_level_scope (block);
-  VLS_CREATE (unique_name, 100);
-  make_unique_object_name (&unique_name, block);
-  entry_ptr = find_block_structure_table_entry (VLS_BEGIN (unique_name), TRUE);
-  if (*entry_ptr == NULL)
-    /* It is new block_structure. */
-    {
-      M2C_ALLOC (block_structure_memory, sizeof (**entry_ptr));
-      *entry_ptr = (struct block_structure *) block_structure_memory;
-      (*entry_ptr)->first_block_link = NULL;
-      M2C_ALLOC ((*entry_ptr)->block_name, VLS_LENGTH (unique_name));
-      strcpy ((*entry_ptr)->block_name, VLS_BEGIN (unique_name));
-      /* Compilation unit block is always needed. */
-      (*entry_ptr)->block_may_be_used = SCOPE (block) == NULL;
-    }
-  VLS_DELETE (unique_name);
-  for (block_link_ptr = current_block_structure->first_block_link;
-       block_link_ptr != NULL && block_link_ptr->block != (*entry_ptr);)
-    block_link_ptr = block_link_ptr->next_block_link;
-  if (block_link_ptr == NULL)
-    /* Link to block BLOCK from current block does not exist yet.  Add the link
-       at the end of the block link list. */
-    {
-      M2C_ALLOC (block_structure_memory, sizeof (struct block_link));
-      block_link_ptr = (struct block_link *) block_structure_memory;
-      block_link_ptr->block = (*entry_ptr);
-      block_link_ptr->next_block_link
-	= current_block_structure->first_block_link;
-      current_block_structure->first_block_link = block_link_ptr;
-    }
-}
-
-/* The recursive function is used for determination of necessary blocks by
-   passing through all block links from block ORIGINAL_BLOCK the necessity of
-   which has been determined. */
-
-static void
-process_block_links (original_block)
-     register struct block_structure *original_block;
-{
-  register struct block_link *block_link;
-
-  if (original_block->block_may_be_used)
-    return;
-  original_block->block_may_be_used = TRUE;
-  for (block_link = original_block->first_block_link;
-       block_link != NULL;
-       block_link = block_link->next_block_link)
-    process_block_links (block_link->block);
-}
-
-/* The function determines which blocks in block_structure_table are to be
-   present in executable program  (i.e. the block is achievable through
-   references to blocks from the blocks of compilation units).  Originally
-   compilation unit block is always needed. */
-
-void
-define_necessary_blocks ()
-{
-  register unsigned int i;
-  register struct block_structure *block_structure_ptr;
-
-  for (i = 0; i < block_structure_table->size; i++)
-    {
-      block_structure_ptr
-	= (struct block_structure *) block_structure_table->entries[i];
-      if (block_structure_ptr != NULL
-	  && block_structure_ptr->block_may_be_used)
-	{
-	  block_structure_ptr->block_may_be_used = FALSE;
-	  process_block_links (block_structure_ptr);
-	}
-    }
-}
-
-/* The recursive function processes expression EXPR to find reference to a
-   block (procedure) and to insert the corresponding block link for the
-   current block (i.e block corresponding to current_block_structure). */
-
-static void
-process_expression (expr)
-     register ICN_pointer expr;
-{
-  register ICN_pointer actual;
-
-  if (expr == NULL)
-    return;
-  switch (MODE (expr))
-    {
-    case ICNM_INTEGER:
-    case ICNM_CARDINAL:
-    case ICNM_REAL:
-    case ICNM_SET:
-    case ICNM_STRING:
-    case ICNM_VARIABLE_DECLARATION:
-    case ICNM_FORMAL_PARAMETER:
-    case ICNM_FIELD:
-      break;
-    case ICNM_PROCEDURE:
-      insert_block_link (expr);
-      break;
-    case ICNM_LESS_THAN:
-    case ICNM_GREATER_THAN:
-    case ICNM_OR:
-    case ICNM_AND:
-    case ICNM_REAL_DIVISION:
-    case ICNM_ADDITION:
-    case ICNM_SUBTRACTION:
-    case ICNM_MULT:
-    case ICNM_DIV:
-    case ICNM_MOD:
-    case ICNM_EQUAL:
-    case ICNM_UNEQUAL:
-    case ICNM_LESS_OR_EQUAL:
-    case ICNM_GREATER_OR_EQUAL:
-    case ICNM_IN:
-    case ICNM_QUALIFICATION:
-    case ICNM_INDEXING:
-    case ICNM_RANGE_IN_SET_VALUE:
-      process_expression (LEFT_OPERAND (expr));
-      process_expression (RIGHT_OPERAND (expr));
-      break;
-    case ICNM_SIGN_CONVERSION:
-    case ICNM_NOT:
-    case ICNM_DEREFERENCING:
-    case ICNM_ELEMENT_IN_SET_VALUE:
-      process_expression (OPERAND (expr));
-      break;
-    case ICNM_FUNCTION_CALL:
-      process_expression (FUNCTION_CALL_NODE (expr)->function_designator);
-      for (actual = FUNCTION_CALL_NODE (expr)->function_actual_parameter_list;
-	   actual != NULL;
-	   actual = ACTUAL_PARAMETER_NODE (actual)->next_actual_parameter)
-	process_expression (ACTUAL_PARAMETER_NODE (actual)
-			    ->actual_parameter_expression);
-      break;
-    default:
-      break;			/* may be C procedure, types & etc.*/
-    }
-}
-
-/* The recursive function processes statement list starting with STATEMENT to
-   find reference to a block (procedure) and to insert the corresponding block
-   link for the current block (i.e block corresponding to
-   current_block_structure).  STATEMENT is to refer to statement (or NULL). */
-
-static void
-process_statement_list (statement)
-     register ICN_pointer statement;
-{
-  ICN_pointer if_cont, variant, actual, case_label;
-
-  for (; statement != NULL; statement = NEXT_STATEMENT (statement))
-    switch (MODE (statement))
-      {
-      case ICNM_BLOCK_BEGIN:
-      case ICNM_RETURN_WITHOUT_RESULT:
-	break;
-      case ICNM_RETURN_WITH_RESULT:
-	process_expression (RETURN_WITH_RESULT_NODE (statement)
-			    ->returned_expression);
-	break;
-      case ICNM_LOOP_STATEMENT:
-	process_statement_list (LOOP_STATEMENT_NODE (statement)
-				->loop_statements);
-	break;
-      case ICNM_EXIT_STATEMENT:
-	break;
-      case ICNM_WHILE_STATEMENT:
-	process_expression (WHILE_STATEMENT_NODE (statement)
-			    ->while_expression);
-	process_statement_list (WHILE_STATEMENT_NODE (statement)
-				->while_statements);
-	break;
-      case ICNM_REPEAT_STATEMENT:
-	process_statement_list (REPEAT_STATEMENT_NODE (statement)
-				->repeat_statements);
-	process_expression (REPEAT_STATEMENT_NODE (statement)
-			    ->until_expression);
-	break;
-      case ICNM_IF_STATEMENT:
-	process_expression (IF_STATEMENT_NODE (statement)->if_expression);
-	process_statement_list (IF_STATEMENT_NODE (statement)->if_statements);
-	for (if_cont = IF_STATEMENT_NODE (statement)->if_continuation;
-	     if_cont != NULL && MODE (if_cont) == ICNM_ELSIF_CLAUSE;
-	     if_cont = ELSIF_CLAUSE_NODE (if_cont)->elsif_continuation)
-	  {
-	    process_expression (ELSIF_CLAUSE_NODE (if_cont)->elsif_expression);
-	    process_statement_list (ELSIF_CLAUSE_NODE (if_cont)
-				    ->elsif_statements);
-	  }
-	if (if_cont != NULL)
-	  process_statement_list (if_cont);
-	break;
-      case ICNM_FOR_STATEMENT:
-	process_expression (FOR_STATEMENT_NODE (statement)
-			    ->for_control_variable);
-	process_expression (FOR_STATEMENT_NODE (statement)
-			    ->for_starting_value);
-	process_expression (FOR_STATEMENT_NODE (statement)->for_increment);
-	process_expression (FOR_STATEMENT_NODE (statement)->for_limit);
-	process_statement_list (FOR_STATEMENT_NODE (statement)
-				->for_statements);
-	break;
-      case ICNM_WITH_STATEMENT:
-	process_expression (WITH_STATEMENT_NODE (statement)->with_designator);
-	process_statement_list (WITH_STATEMENT_NODE (statement)
-				->with_statements);
-	break;
-      case ICNM_C_CODE_IN_STATEMENTS:
-	break;
-      case ICNM_CASE_STATEMENT:
-	process_expression (CASE_STATEMENT_NODE (statement)->case_expression);
-	for (variant
-	     = CASE_STATEMENT_NODE (statement)->case_statement_variant_list;
-	     MODE (variant) == ICNM_CASE_STATEMENT_VARIANT;
-	     variant
-	     = CASE_STATEMENT_VARIANT_NODE (variant)->next_case_variant)
-	  {
-	    for (case_label
-		 = CASE_STATEMENT_VARIANT_NODE (variant)->case_label_list;
-		 case_label != NULL;
-		 case_label = CASE_LABEL_LIST (case_label))
-	      if (MODE (case_label) == ICNM_CASE_STATEMENT_LABEL_ELEMENT)
-		process_expression
-		  (CASE_STATEMENT_LABEL_ELEMENT_NODE (case_label)
-		   ->case_label_value);
-	      else
-		{
-		  process_expression
-		    (CASE_STATEMENT_LABEL_RANGE_NODE (case_label)
-		     ->case_label_range_left_bound);
-		  process_expression
-		    (CASE_STATEMENT_LABEL_RANGE_NODE (case_label)
-		     ->case_label_range_right_bound);
-		}
-	    process_statement_list (CASE_STATEMENT_VARIANT_NODE (variant)
-				    ->case_variant_elements);
-	  }
-	break;
-      case ICNM_ASSIGNMENT:
-	process_expression (ASSIGNMENT_NODE (statement)->assignment_variable);
-	process_expression (ASSIGNMENT_NODE (statement)
-			    ->assignment_expression);
-	break;
-      case ICNM_PROCEDURE_CALL:
-	process_expression (PROCEDURE_CALL_NODE (statement)
-			    ->procedure_designator);
-	for (actual = (PROCEDURE_CALL_NODE (statement)
-		       ->procedure_actual_parameter_list);
-	     actual != NULL;
-	     actual = ACTUAL_PARAMETER_NODE (actual)->next_actual_parameter)
-	  process_expression (ACTUAL_PARAMETER_NODE (actual)
-			      ->actual_parameter_expression);
-	break;
-      default:
-	abort ();
-      }
-}
-
-/* The function returns TRUE if BLOCK is needed in executable program or
-   flag `-all' is not given.  BLOCK is to refer to compilation unit or
-   procedure.  If procedure code is necessary for the program then all local
-   modules contained in the procedure are also necessary for the program. */
-
-static int
-block_code_may_be_used (block)
-     ICN_pointer block;
-{
-  VLS unique_name;
-  register struct block_structure **entry;
-
-  if (!pass_of_generation_when_all_flag)
-    return TRUE;
-  VLS_CREATE (unique_name, 100);
-  make_unique_object_name (&unique_name, block);
-  entry = find_block_structure_table_entry (VLS_BEGIN (unique_name), FALSE);
-  VLS_DELETE (unique_name);
-  return *entry != NULL && (*entry)->block_may_be_used;
-}
-
-
-
-/* This page contains main function of the generator. */
-
-
-/* The variable contains place where the generator finishes its work. */
-
-static jmp_buf jump_to_finish;
-
-/* The variable contains code of generation (0 - success). */
-
-static int code_of_generation;
-
-/* The function closes output file and finishes generation with CODE
-   (0 - success). */
-
-static void
-finish_generation (code)
-     int code;
-{
-  if (output_file != NULL)
-    {
-      if (fclose (output_file) != 0)
-	{
-	  output_file = NULL;
-	  error_with_parameter (ERR_file_closing, modula_output_file_name);
-	}
-    }
-  code_of_generation = code;
-  longjmp (jump_to_finish, TRUE);
-}
-
-/* This is main function of Modula-2 generator of C code.  Object file name
-   of current compilation unit is OUTPUT_FILE_NAME.  The function returns TRUE
-   if the generation is successful. */
-
-int
-generator (char *output_file_name)
-{
-  ICN_pointer ref, scref;
-
-  modula_output_file_name = output_file_name;
-  if (setjmp (jump_to_finish))
-    return !code_of_generation;
-  output_file = NULL;
-  finish_procedure = finish_generation;	/* for fatal error processing */
-  if (pass_of_picking_used_objects_when_all_flag)
-    /* Pick up of dependences between all objects. */
-    {
-      ref = first_block_begin ();
-      for (;;)
-	{
-	  if (ref == NULL)
-	    break;
-	  scref = BLOCK_BEGIN_NODE (ref)->block_scope;
-	  BLOCK_BEGIN (scref) = ref;
-	  set_current_block_structure (scref);
-	  process_statement_list (ref);
-	  ref = BLOCK_BEGIN_NODE (ref)->next_block_begin;
-	}
-    }
-  else
-    {
-      output_file = fopen (modula_output_file_name, "w");
-      if (output_file == NULL)
-	error_with_parameter (ERR_object_file_opening,
-			      modula_output_file_name);
-      /* runtime library */
-      if (fprintf (output_file, "#include \"m2lib.h\"\n") < 0)
-	output_file_error();
-      /* for gdb, dbx. */
-      if (fprintf (output_file, "#line 1 \"%s\"\n#line 1 \"%s\"\n",
-		   input_file_name, modula_output_file_name) < 0)
-	output_file_error ();
-      generate_all_declarations (current_compilation_unit);
-      ref = first_block_begin ();
-      for (;;)
-	{
-	  if (ref == NULL)
-	    break;
-	  scref = BLOCK_BEGIN_NODE (ref)->block_scope;
-	  BLOCK_BEGIN (scref) = ref;
-	  if (MODE (scref) != ICNM_MODULE
-	      || ((enum module_mode) MODULE_NODE (scref)->module_mode
-		  != MM_LOCAL_MODULE))
-	    {
-	      execute_string_constants_declarations_generation_pass (scref);
-	      generate_block (scref);
-	    }
-	  ref = BLOCK_BEGIN_NODE (ref)->next_block_begin;
-	}
-    }
-  finish_generation (0);
-}

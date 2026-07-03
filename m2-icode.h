@@ -38,6 +38,7 @@
 
 #ifndef M2_ICODE_H
 #define M2_ICODE_H
+#include "m2-common.h"
 
 enum icode_node_mode
 {
@@ -1315,10 +1316,10 @@ extern void free_pool ();
 extern void delete_node (register ICN_pointer ref);
 extern ICN_pointer create_node (register enum icode_node_mode mode);
 extern ICN_pointer create_node_with_string (register enum icode_node_mode m, char *str, char **string_in_pool_ptr);
-extern ICN_pointer create_identifier_node ();
+extern ICN_pointer create_identifier_node (char* str);
 extern ICN_pointer first_block_begin ();
 
-extern void initiate_table_and_environment (register int i, register ICN_pointer ref);
+extern void initiate_table_and_environment ();
 extern void delete_table ();
 extern ICN_pointer find_in_or_else_include_to_table (ICN_pointer ref);
 extern ICN_pointer find_identifier (char *string);
@@ -1331,26 +1332,26 @@ extern ICN_pointer find_identifier_declaration (register ICN_pointer scope, ICN_
 extern int it_is_integer_type (register ICN_pointer ref);
 extern int it_is_cardinal_type (register ICN_pointer ref);
 extern int it_is_integer_cardinal_type (register ICN_pointer ref);
-extern int it_is_real_type ();
-extern int it_is_string_type ();
-extern int string_length_from_its_type ();
-extern int it_is_character_type ();
-extern Tcard cardinal_value ();
-extern ICN_pointer type_of_real_value ();
-extern ICN_pointer type_of_cardinal_value ();
-extern ICN_pointer type_of_integer_value ();
-extern ICN_pointer integer_cardinal_type_of_cardinal_value ();
-extern ICN_pointer through_integer_cardinal_type ();
-extern ICN_pointer next_enumeration_constant ();
-extern ICN_pointer procedure_over_denotation ();
-extern ICN_pointer next_parameter_type ();
-extern ICN_pointer through_range_type ();
-extern ICN_pointer min_or_max ();
-extern int types_are_identical ();
-extern int types_are_assignment_compatible ();
-extern ICN_pointer result_of_compatible_types ();
-extern int subgraph_is_type ();
-extern int subgraph_is_expression ();
+extern int it_is_real_type (register int i, register ICN_pointer ref);
+extern int it_is_string_type (register ICN_pointer ref);
+extern int string_length_from_its_type (ICN_pointer ref);
+extern int it_is_character_type (register ICN_pointer ref);
+extern Tcard cardinal_value (register ICN_pointer ref);
+extern ICN_pointer type_of_real_value (Treal r);
+extern ICN_pointer type_of_cardinal_value (Tcard c);
+extern ICN_pointer type_of_integer_value (Tint i);
+extern ICN_pointer integer_cardinal_type_of_cardinal_value (Tcard c);
+extern ICN_pointer through_integer_cardinal_type (register ICN_pointer type);
+extern ICN_pointer next_enumeration_constant (register ICN_pointer ref);
+extern ICN_pointer procedure_over_denotation (register ICN_pointer ref);
+extern ICN_pointer next_parameter_type (register ICN_pointer ref);
+extern ICN_pointer through_range_type (register ICN_pointer ref);
+extern ICN_pointer min_or_max (register ICN_pointer ref, register int flmin);
+extern int types_are_identical (register ICN_pointer type1, register ICN_pointer type2);
+extern int types_are_assignment_compatible(register ICN_pointer type1, register ICN_pointer type2);
+extern ICN_pointer result_of_compatible_types (register ICN_pointer type1, register ICN_pointer type2);
+extern int subgraph_is_type (register ICN_pointer ref, register semantic_information *sinf);
+extern int subgraph_is_expression (register ICN_pointer ref, register semantic_information *sinf);
 
 extern void print_node ();
 

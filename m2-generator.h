@@ -15,7 +15,10 @@
  * You should have received a copy of the GNU General Public License along
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef M2_GENERATOR_H
+#define M2_GENERATOR_H
 
 extern int generator (char *output_file_name);
 extern void create_block_structure_table ();
 extern void define_necessary_blocks ();
+#endif // M2_GENERATOR_H

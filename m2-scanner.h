@@ -17,6 +17,8 @@
  */
 
 /* Symbols of Modula-2 vocabulary. */
+#ifndef M2_SCANNER_H
+#define M2_SCANNER_H
 
 enum symbol
 {
@@ -121,3 +123,4 @@ extern int it_is_stop_symbol[];
 
 #define REMOVE_STOP_SYMBOL(symbol) (--it_is_stop_symbol[(int) symbol]<0\
 				    ? (abort(), 0) : 0)
+#endif // M2_SCANNER_H

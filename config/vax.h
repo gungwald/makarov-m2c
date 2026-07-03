@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License along
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef VAX_H
+#define VAX_H
 
 #ifdef __STDC__
 #include <limits.h>
@@ -34,3 +36,4 @@
 /* No aim at more alignment. */
 
 #define MAX_ALIGNMENT 4
+#endif // VAX_H

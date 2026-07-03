@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License along
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef VAX_POSIX_H
+#define VAX_POSIX_H
 
 #include "vax.h"
 #include "posix.h"
@@ -45,3 +47,4 @@
    previous macros (if it is defined). */
 
 /*#define MAKING_MORE_PRECISE_ALIGN_BY_TYPE(align,icode_ptr) */
+#endif // VAX_POSIX_H

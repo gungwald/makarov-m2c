@@ -16,8 +16,13 @@
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "m2-common.h"
+#include "m2-errors.h"
+#include "m2-icode.h"
+#include "m2-type-size.h"
+#include "m2-library.h"
+#include "m2lib.h"
 
+#include <string.h>
 
 /* Table of icode node characteristics.  The order of the table elements is
    the same as in enumeration icode_node_mode.
@@ -1405,8 +1410,7 @@ create_node_with_string (register enum icode_node_mode m, char *str, char **stri
    exists). */
 
 ICN_pointer
-create_identifier_node (str)
-     char *str;
+create_identifier_node(char* str)
 {
   ICN_pointer ref;
   char *string_in_pool;
@@ -1653,54 +1657,57 @@ compare_function (hash_table_entry el1_ptr, hash_table_entry el2_ptr)
 /* Initiate the icode node hash table (create it and initiate standard
    environment). */
 
+
 void
-initiate_table_and_environment (register int i, register ICN_pointer ref)
+initiate_table_and_environment ()
 {
+  register int i;
+  register ICN_pointer ref;
+
   /* The following icode real nodes are initiated here because maximum and
      minimum real values in the file float.h may be not C constant expression
-     (see ANSI standard of C language). */
+    (see ANSI standard of C language). */
 
-  ICN_V_min_short_real.mode = (ICN_mode) ICNM_REAL;
-  ICN_V_min_short_real.value_type = ICN_POINTER (&ICN_TD_short_real);
+  ICN_V_min_short_real.mode = (ICN_mode)ICNM_REAL;
+  ICN_V_min_short_real.value_type = ICN_POINTER(&ICN_TD_short_real);
   ICN_V_min_short_real.real_value = SHORTREAL_MIN;
 
-  ICN_V_min_real.mode = (ICN_mode) ICNM_REAL;
-  ICN_V_min_real.value_type = ICN_POINTER (&ICN_TD_real);
+  ICN_V_min_real.mode = (ICN_mode)ICNM_REAL;
+  ICN_V_min_real.value_type = ICN_POINTER(&ICN_TD_real);
   ICN_V_min_real.real_value = REAL_MIN;
 
-  ICN_V_min_long_real.mode = (ICN_mode) ICNM_REAL;
-  ICN_V_min_long_real.value_type = ICN_POINTER (&ICN_TD_long_real);
+  ICN_V_min_long_real.mode = (ICN_mode)ICNM_REAL;
+  ICN_V_min_long_real.value_type = ICN_POINTER(&ICN_TD_long_real);
   ICN_V_min_long_real.real_value = LONGREAL_MIN;
 
-  ICN_V_max_short_real.mode = (ICN_mode) ICNM_REAL;
-  ICN_V_max_short_real.value_type = ICN_POINTER (&ICN_TD_short_real);
+  ICN_V_max_short_real.mode = (ICN_mode)ICNM_REAL;
+  ICN_V_max_short_real.value_type = ICN_POINTER(&ICN_TD_short_real);
   ICN_V_max_short_real.real_value = SHORTREAL_MAX;
 
-  ICN_V_max_real.mode = (ICN_mode) ICNM_REAL;
-  ICN_V_max_real.value_type = ICN_POINTER (&ICN_TD_real);
+  ICN_V_max_real.mode = (ICN_mode)ICNM_REAL;
+  ICN_V_max_real.value_type = ICN_POINTER(&ICN_TD_real);
   ICN_V_max_real.real_value = REAL_MAX;
 
-  ICN_V_max_long_real.mode = (ICN_mode) ICNM_REAL;
-  ICN_V_max_long_real.value_type = ICN_POINTER (&ICN_TD_long_real);
+  ICN_V_max_long_real.mode = (ICN_mode)ICNM_REAL;
+  ICN_V_max_long_real.value_type = ICN_POINTER(&ICN_TD_long_real);
   ICN_V_max_long_real.real_value = LONGREAL_MAX;
 
-  node_hash_table = create_hash_table (1000, hash_function, compare_function);
+  node_hash_table = create_hash_table(1000, hash_function, compare_function);
   for (i = 0;; i++)
-    {
-      ref = nodes_for_hash_table[i];
-      if (ref == NULL)
-	break;
-      find_in_or_else_include_to_table (ref);
-    }
+  {
+    ref = nodes_for_hash_table[i];
+    if (ref == NULL)
+      break;
+    find_in_or_else_include_to_table(ref);
+  }
 }
-
 
 /* Delete the icode node hash table. */
 
 void
-delete_table ()
+delete_table()
 {
-  delete_hash_table (node_hash_table);
+  delete_hash_table(node_hash_table);
 }
 
 
@@ -1826,7 +1833,7 @@ find_denotation_in_second_space (ICN_pointer scope, ICN_pointer identifier)
 
 /* Return pointer to corresponding declaration node for identifier starting
    with IDENTIFIER in object starting with SCOPE and opening new scope.
-   Search is executed only without processing export/import.  Therefore
+   Search is executed only without processing export/import.  Therefore,
    function may be return export or import node.  Return NULL if the
    declaration is not found. */
 
@@ -1995,8 +2002,7 @@ it_is_real_type (register ICN_pointer ref)
    any string type.  See also commentaries for BTM_EMPTY_STRING. */
 
 int
-it_is_string_type (ref)
-     register ICN_pointer ref;
+it_is_string_type (register ICN_pointer ref)
 {
   return (ref != NULL && MODE (ref) == ICNM_BASIC_TYPE
 	  && (int) BASIC_TYPE_NODE (ref)->basic_type >= (int) BTM_EMPTY_STRING);
@@ -2008,8 +2014,7 @@ it_is_string_type (ref)
    for BTM_EMPTY_STRING. */
 
 int
-string_length_from_its_type (ref)
-     ICN_pointer ref;
+string_length_from_its_type(ICN_pointer ref)
 {
   return (int) BASIC_TYPE_NODE (ref)->basic_type - (int) BTM_EMPTY_STRING;
 }
@@ -2020,8 +2025,7 @@ string_length_from_its_type (ref)
    as a character. */
 
 int
-it_is_character_type (ref)
-     register ICN_pointer ref;
+it_is_character_type (register ICN_pointer ref)
 {
   return (ref == ICN_POINTER (&ICN_TD_char)
 	  || (it_is_string_type (ref)
@@ -2034,8 +2038,7 @@ it_is_character_type (ref)
    Otherwise return TYPE. */
 
 ICN_pointer
-through_integer_cardinal_type (type)
-     register ICN_pointer type;
+through_integer_cardinal_type (register ICN_pointer type)
 {
   if (type == ICN_POINTER (&ICN_TD_short_cardinal_or_integer))
     return ICN_POINTER (&ICN_TD_short_cardinal);
@@ -2051,8 +2054,7 @@ through_integer_cardinal_type (type)
    REF must be pointer to cardinal node or one-character string node. */
 
 Tcard
-cardinal_value (ref)
-     register ICN_pointer ref;
+cardinal_value (register ICN_pointer ref)
 {
   return (MODE (ref) == ICNM_STRING
 	  ? CHAR_TO_INT (*STRING_NODE (ref)->string_value)
@@ -2064,8 +2066,7 @@ cardinal_value (ref)
    suitable for storing R. */
 
 ICN_pointer
-type_of_real_value (r)
-     Treal r;
+type_of_real_value(Treal r)
 {
   return ICN_POINTER (&ICN_TD_long_real);
 }
@@ -2082,8 +2083,7 @@ type_of_real_value (r)
    suitable for storing C. */
 
 ICN_pointer
-type_of_cardinal_value (c)
-     Tcard c;
+type_of_cardinal_value(Tcard c)
 {
   return (VALUE_IS_OF_SHORT_CARDINAL_TYPE (c)
 	  ? ICN_POINTER (&ICN_TD_short_cardinal)
@@ -2104,8 +2104,7 @@ type_of_cardinal_value (c)
    suitable for storing I. */
 
 ICN_pointer
-type_of_integer_value (i)
-     Tint i;
+type_of_integer_value(Tint i)
 {
   return (VALUE_IS_OF_SHORT_INTEGER_TYPE (i)
 	  ? ICN_POINTER (&ICN_TD_short_integer)
@@ -2119,8 +2118,7 @@ type_of_integer_value (i)
    type suitable for storing C. */
 
 ICN_pointer
-integer_cardinal_type_of_cardinal_value (c)
-     Tcard c;
+integer_cardinal_type_of_cardinal_value(Tcard c)
 {
   return (c <= SHORTINT_MAX ? ICN_POINTER (&ICN_TD_short_cardinal_or_integer)
 	  : (c <= INTEGER_MAX ? ICN_POINTER (&ICN_TD_cardinal_or_integer)
@@ -2136,8 +2134,7 @@ integer_cardinal_type_of_cardinal_value (c)
    constant) return NULL. */
 
 ICN_pointer
-next_enumeration_constant (ref)
-     register ICN_pointer ref;
+next_enumeration_constant (register ICN_pointer ref)
 {
   register ICN_pointer r;
 
@@ -2170,8 +2167,7 @@ next_enumeration_constant (ref)
    REF must refers to denotation (node having members identifier and scope). */
 
 ICN_pointer
-procedure_over_denotation (ref)
-     register ICN_pointer ref;
+procedure_over_denotation (register ICN_pointer ref)
 {
   for (; ref != NULL && MODE (ref) != ICNM_PROCEDURE; ref = SCOPE (ref)) ;
   return ref;
@@ -2184,8 +2180,7 @@ procedure_over_denotation (ref)
    or last parameter than return NULL. */
 
 ICN_pointer
-next_parameter_type (ref)
-     register ICN_pointer ref;
+next_parameter_type (register ICN_pointer ref)
 {
   ref = NEXT_DECLARATION_ELEMENT (ref);
   if (ref != NULL && (MODE (ref) == ICNM_FORMAL_PARAMETER
@@ -2199,8 +2194,7 @@ next_parameter_type (ref)
    Otherwise return TYPE. */
 
 ICN_pointer
-through_range_type (type)
-     register ICN_pointer type;
+through_range_type (register ICN_pointer type)
 {
   if (type != NULL && MODE (type) == ICNM_RANGE_TYPE)
     type = RANGE_TYPE_NODE (type)->base_type;
@@ -2244,9 +2238,7 @@ static ICN_pointer max_basic_type_value_table[] =
    the following function returns NULL. */
 
 ICN_pointer
-min_or_max (ref, flmin)
-     register ICN_pointer ref;
-     register int flmin;
+min_or_max (register ICN_pointer ref, register int flmin)
 {
   register ICN_pointer current_enumeration_constant;
 
@@ -2284,8 +2276,7 @@ min_or_max (ref, flmin)
    than return its real type definition.  Otherwise return TYPE. */
 
 static ICN_pointer
-through_opaque_type (type)
-     register ICN_pointer type;
+through_opaque_type (register ICN_pointer type)
 {
   register ICN_pointer r;
 
@@ -2308,8 +2299,7 @@ through_opaque_type (type)
    starting with TYPE1 and TYPE2 are identical types. */
 
 int
-types_are_identical (type1, type2)
-     register ICN_pointer type1, type2;
+types_are_identical (register ICN_pointer type1, register ICN_pointer type2)
 {
   if (type1 != NULL && type2 != NULL)
     {
@@ -2353,8 +2343,7 @@ types_are_identical (type1, type2)
    for mentioned function). */
 
 static ICN_pointer
-auxiliary_function (type1, type2)
-     register ICN_pointer type1, type2;
+auxiliary_function (register ICN_pointer type1, register ICN_pointer type2)
 {
   register ICN_pointer ref;
 
@@ -2426,8 +2415,7 @@ auxiliary_function (type1, type2)
    of both types TYPE1 and TYPE2. */
 
 ICN_pointer
-result_of_compatible_types (type1, type2)
-     register ICN_pointer type1, type2;
+result_of_compatible_types (register ICN_pointer type1, register ICN_pointer type2)
 {
   register ICN_pointer ref;
 
@@ -2481,8 +2469,7 @@ result_of_compatible_types (type1, type2)
    starting with TYPE1 and TYPE2 are assignment compatible types. */
 
 int
-types_are_assignment_compatible (type1, type2)
-     register ICN_pointer type1, type2;
+types_are_assignment_compatible (register ICN_pointer type1, register ICN_pointer type2)
 {
   type1 = through_range_type (type1);
   type2 = through_range_type (type2);
@@ -2507,9 +2494,7 @@ types_are_assignment_compatible (type1, type2)
    type.  If it is true than member type in SINF is set up by REF. */
 
 int
-subgraph_is_type (ref, sinf)
-     register ICN_pointer ref;
-     register semantic_information *sinf;
+subgraph_is_type (register ICN_pointer ref, register semantic_information *sinf)
 {
   if (ref == NULL)
     return FALSE;
@@ -2544,11 +2529,8 @@ subgraph_is_type (ref, sinf)
    for semantic_information) about the expression is passed through SINF. */
 
 int
-subgraph_is_expression (ref, sinf)
-     register ICN_pointer ref;
-     register semantic_information *sinf;
+subgraph_is_expression (register ICN_pointer ref, register semantic_information *sinf)
 {
-
   if (ref == NULL)
     return FALSE;
   sinf->it_is_designator = TRUE;
@@ -2854,10 +2836,7 @@ static char **ICPN_in_node_table[] =
    mode NODE_MODE.  If REF is NULL print is not executed. */
 
 static void
-print_icode_node_pointer (ref, npointer, node_mode)
-     ICN_pointer ref;
-     int npointer;
-     enum icode_node_mode node_mode;
+print_icode_node_pointer (ICN_pointer ref, int npointer, enum icode_node_mode node_mode)
 {
   if (ref != NULL)
     {
@@ -2873,8 +2852,7 @@ print_icode_node_pointer (ref, npointer, node_mode)
 /* Print icode node starting with REF. */
 
 void
-print_node (ref)
-     register ICN_pointer ref;
+print_node (register ICN_pointer ref)
 {
   register int i, npointer;
   register enum icode_node_mode node_mode;

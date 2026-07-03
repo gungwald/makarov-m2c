@@ -27,6 +27,8 @@
    character `-' and finishes by character `''.  The flag suffix may be starts
    with white spaces.  It means that the corresponding flag has
    obligatory flag parameter. */
+#ifndef GCC_H
+#define GCC_H
 
 #define OPTIONS "FILE PREFIX LEN LIBRARY DIR REG LETTERS MACRO MACRO=DEFN %%\
 `-3' Support 3rd edition of Wirth's book (implicitly the 4th edition).\n\
@@ -285,3 +287,4 @@ Here are the possible letters:\n\
 /* The following file is to be included here! */
 
 #include "common_part.h"
+#endif // GCC_H

@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License along
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef M2_COMMON_H
+#define M2_COMMON_H
 
 #include "m2-config.h"
 #include "m2-errors.h"
@@ -70,3 +72,4 @@ extern int strict_flag;
 extern int third_edition_flag;
 extern int it_is_definition_module;
 extern int it_is_main_module;
+#endif // M2_COMMON_H

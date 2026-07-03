@@ -15,6 +15,8 @@
  * You should have received a copy of the GNU General Public License along
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef PYRAMID_H
+#define PYRAMID_H
 
 #include <limits.h>
 #include <float.h>
@@ -22,3 +24,4 @@
 /* No aim at more alignment. */
 
 #define MAX_ALIGNMENT 4
+#endif // PYRAMID_H

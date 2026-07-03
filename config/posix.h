@@ -27,6 +27,8 @@
    character `-' and finishes by character `''.  The flag suffix may be starts
    with white spaces.  It means that the corresponding flag has
    obligatory flag parameter. */
+#ifndef POSIX_H
+#define POSIX_H
 
 #define OPTIONS "name name=def dir xxx file %%\
 `-3' Support 3rd edition of Wirth's book (implicitly the 4th edition).\n\
@@ -184,3 +186,4 @@
 /* The following file is to be included here! */
 
 #include "common_part.h"
+#endif // POSIX_H

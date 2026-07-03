@@ -632,6 +632,7 @@ static VLS symbol_text;
    skips all white spaces and commentaries and fixes all lexical errors. */
 
 static enum symbol
+int
 next_file_symbol ()
 {
   register int input_char;
@@ -1240,6 +1241,7 @@ enum symbol current_symbol;
    icode_symbol_presentation are set up correspondingly. */
 
 enum symbol
+int
 next_symbol ()
 {
   register struct symbol_buffer_entry *buffer_entry_ptr;
@@ -1467,8 +1469,7 @@ static int number_of_unmatched_symbols;
    following error recovery. */
 
 static void
-syntactic_error (error_message)
-     char *error_message;
+syntactic_error(char* error_message)
 {
   register int i;
 
