@@ -16,6 +16,7 @@
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <stdint.h>     /* for intptr_t */
 #include "m2-common.h"
 
 

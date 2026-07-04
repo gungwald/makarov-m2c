@@ -1555,10 +1555,15 @@ C_compilation (after_modula, input_file_name, original_argument_number)
   char *C_presentation_of_flag_name, *parameter;
   char *output_file_name, *str, *name_without_suffix;
   int flag_is_ordered, ordered_flag_start;
+  char *c99, *posix;
 
   VLS_CREATE (C_argument_vector, 100);
   str = C_COMPILER;
   VLS_ADD_MEMORY (C_argument_vector, &str, sizeof (char *));
+  c99 = "-std=c99";
+  posix = "-D_POSIX_C_SOURCE=199309L";
+  VLS_ADD_MEMORY (C_argument_vector, &c99, sizeof (char *));
+  VLS_ADD_MEMORY (C_argument_vector, &posix, sizeof (char *));
   /* Add all additional flags for C. */
   for (i = 0;; i++)
     {

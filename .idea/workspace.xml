@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="BackendCodeEditorMiscSettings">
+    <option name="/Default/Housekeeping/OptionsDialog/SelectedPageId/@EntryValue" value="CppGeneralOptions" type="string" />
+  </component>
+  <component name="BackgroundAgentGlobalSettings">
+    <option name="selectedModelId" value="auto" />
+  </component>
+  <component name="CMakeProjectFlavorService">
+    <option name="flavorId" value="CMakePlainProjectFlavor" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="makarov-m2c" targetName="all" />
+      <config projectName="makarov-m2c" targetName="m2c" />
+      <config projectName="makarov-m2c" targetName="distclean" />
+      <config projectName="makarov-m2c" targetName="m2lib.a" />
+      <config projectName="makarov-m2c" targetName="TAGS" />
+      <config projectName="makarov-m2c" targetName="install" />
+      <config projectName="makarov-m2c" targetName="dist" />
+      <config projectName="makarov-m2c" targetName="modclean" />
+      <config projectName="makarov-m2c" targetName="uninstall" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dd835709-65f3-42e9-a72c-83f0480aaedc" name="Changes" comment="Make func protos &amp; defs ANSI because gcc requires it (part 4)&#10;&#10;Also added guards around all header files">
+      <change beforePath="$PROJECT_DIR$/Makefile.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/m2-main.c" beforeDir="false" afterPath="$PROJECT_DIR$/m2-main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/m2-type-size.c" beforeDir="false" afterPath="$PROJECT_DIR$/m2-type-size.c" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/home/bill/git/makarov-m2c" value="3FuNAIohKBYlHY3kSN82JARUODU" />
+    </persistenceIdMap>
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="6CDyJT9y" />
+  </component>
+  <component name="Make.Settings">
+    <option name="showHiddenInToolWindow" value="true" />
+  </component>
+  <component name="MakefileLocalSettings">
+    <option name="availableProjects">
+      <map>
+        <entry>
+          <key>
+            <ExternalProjectPojo>
+              <option name="name" value="makarov-m2c" />
+              <option name="path" value="$PROJECT_DIR$" />
+            </ExternalProjectPojo>
+          </key>
+          <value>
+            <list>
+              <ExternalProjectPojo>
+                <option name="name" value="makarov-m2c" />
+                <option name="path" value="$PROJECT_DIR$" />
+              </ExternalProjectPojo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="projectSyncType">
+      <map>
+        <entry key="$PROJECT_DIR$" value="RE_IMPORT" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2026" />
+    <option name="minorVersion" value="1.3" />
+    <option name="productBranch" value="Classic" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "customColor": "",
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="3FuNAIohKBYlHY3kSN82JARUODU" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Makefile Target.all.executor": "Run",
+    "Makefile Target.clean.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Native Application.all (1).executor": "Run",
+    "Native Application.m2c.executor": "Debug",
+    "RunOnceActivity.RadMigrateCodeStyle": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHELLCHECK.PATH": "/home/bill/.local/share/JetBrains/CLion2026.1/Shell Script/shellcheck",
+    "Shell Script.configure.executor": "Run",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "copilot.chat.legacySessionMetadata.migrated": "true",
+    "git-widget-placeholder": "force-acceptance-of-traditional-prototypes",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "org.rust.first.attach.projects": "true",
+    "settings.editor.selected.configurable": "MakefileSettings",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Makefile Target.all">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TAGS" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="makarov-m2c" TARGET_NAME="TAGS" CONFIG_NAME="TAGS" version="1" RUN_TARGET_PROJECT_NAME="makarov-m2c" RUN_TARGET_NAME="TAGS">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="makarov-m2c" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_TARGET_PROJECT_NAME="makarov-m2c" RUN_TARGET_NAME="all">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="dist" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="makarov-m2c" TARGET_NAME="dist" CONFIG_NAME="dist" version="1" RUN_TARGET_PROJECT_NAME="makarov-m2c" RUN_TARGET_NAME="dist">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="distclean" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="makarov-m2c" TARGET_NAME="distclean" CONFIG_NAME="distclean" version="1" RUN_TARGET_PROJECT_NAME="makarov-m2c" RUN_TARGET_NAME="distclean">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="install" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="makarov-m2c" TARGET_NAME="install" CONFIG_NAME="install" version="1" RUN_TARGET_PROJECT_NAME="makarov-m2c" RUN_TARGET_NAME="install">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="m2c" type="CLionNativeAppRunConfigurationType" PROGRAM_PARAMS="-v -O -update -c -P. -I. ./ASCII.mod ./Files.mod ./InOut.mod ./MathLib0.mod ./NumConv.mod ./RealConv.mod ./RealInOut.mod ./ShellVars.mod ./Storage.mod ./String.mod ./Terminal.mod" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$PROJECT_DIR$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="makarov-m2c" TARGET_NAME="m2c" CONFIG_NAME="m2c" version="1" RUN_TARGET_PROJECT_NAME="makarov-m2c" RUN_TARGET_NAME="m2c">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="m2lib.a" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="makarov-m2c" TARGET_NAME="m2lib.a" CONFIG_NAME="m2lib.a" version="1" RUN_TARGET_PROJECT_NAME="makarov-m2c" RUN_TARGET_NAME="m2lib.a">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="modclean" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="makarov-m2c" TARGET_NAME="modclean" CONFIG_NAME="modclean" version="1" RUN_TARGET_PROJECT_NAME="makarov-m2c" RUN_TARGET_NAME="modclean">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="uninstall" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="makarov-m2c" TARGET_NAME="uninstall" CONFIG_NAME="uninstall" version="1" RUN_TARGET_PROJECT_NAME="makarov-m2c" RUN_TARGET_NAME="uninstall">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="all" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="all" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="clean" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="clean" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="configure" type="ShConfigurationType" temporary="true">
+      <option name="SCRIPT_TEXT" value="" />
+      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
+      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/configure" />
+      <option name="SCRIPT_OPTIONS" value="+cc=gcc" />
+      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
+      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
+      <option name="INTERPRETER_PATH" value="/bin/sh" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="EXECUTE_IN_TERMINAL" value="true" />
+      <option name="EXECUTE_SCRIPT_FILE" value="true" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Makefile Target.clean" />
+      <item itemvalue="Makefile Target.all" />
+      <item itemvalue="Native Application.all" />
+      <item itemvalue="Native Application.dist" />
+      <item itemvalue="Native Application.distclean" />
+      <item itemvalue="Native Application.install" />
+      <item itemvalue="Native Application.m2c" />
+      <item itemvalue="Native Application.m2lib.a" />
+      <item itemvalue="Native Application.modclean" />
+      <item itemvalue="Native Application.TAGS" />
+      <item itemvalue="Native Application.uninstall" />
+      <item itemvalue="Shell Script.configure" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Makefile Target.all" />
+        <item itemvalue="Makefile Target.clean" />
+        <item itemvalue="Shell Script.configure" />
+        <item itemvalue="Makefile Target.all" />
+        <item itemvalue="Makefile Target.all" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dd835709-65f3-42e9-a72c-83f0480aaedc" name="Changes" comment="" />
+      <created>1782920865657</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1782920865657</updated>
+      <workItem from="1782920894892" duration="67627000" />
+    </task>
+    <task id="LOCAL-00001" summary="Make a clion project">
+      <option name="closed" value="true" />
+      <created>1782928662009</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1782928662009</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Make func protos &amp; defs ANSI because gcc now requires it">
+      <option name="closed" value="true" />
+      <created>1782928776370</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1782928776370</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Make func protos &amp; defs ANSI because gcc now requires it (part 1)">
+      <option name="closed" value="true" />
+      <created>1782928918786</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1782928918786</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Make func protos &amp; defs ANSI because gcc requires it (part 1)">
+      <option name="closed" value="true" />
+      <created>1782929005819</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1782929005819</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Make func protos &amp; defs ANSI because gcc requires it (part 2)">
+      <option name="closed" value="true" />
+      <created>1783009190122</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1783009190122</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Make func protos &amp; defs ANSI because gcc requires it (part 3)&#10;&#10;Also added guards around all header files">
+      <option name="closed" value="true" />
+      <created>1783098525668</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1783098525668</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Make func protos &amp; defs ANSI because gcc requires it (part 4)&#10;&#10;Also added guards around all header files">
+      <option name="closed" value="true" />
+      <created>1783190648757</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1783190648757</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Make a clion project" />
+    <MESSAGE value="Make func protos &amp; defs ANSI because gcc now requires it" />
+    <MESSAGE value="Make func protos &amp; defs ANSI because gcc now requires it (part 1)" />
+    <MESSAGE value="Make func protos &amp; defs ANSI because gcc requires it (part 1)" />
+    <MESSAGE value="Make func protos &amp; defs ANSI because gcc requires it (part 2)" />
+    <MESSAGE value="Make func protos &amp; defs ANSI because gcc requires it (part 3)&#10;&#10;Also added guards around all header files" />
+    <MESSAGE value="Make func protos &amp; defs ANSI because gcc requires it (part 4)&#10;&#10;Also added guards around all header files" />
+    <option name="LAST_COMMIT_MESSAGE" value="Make func protos &amp; defs ANSI because gcc requires it (part 4)&#10;&#10;Also added guards around all header files" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="CLionNativeAppRunConfigurationType">
+        <watch expression="C_ADDITIONAL_FLAG (i)" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

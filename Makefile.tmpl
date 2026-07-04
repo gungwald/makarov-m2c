@@ -46,6 +46,15 @@ CFLAGS= -O -g -I. -I$(srcdir) -I$(srcdir)/config\
  -DTEMPORARY_DIRECTORY='"$(tempdir)"'\
  -DM2_RUN_TIME_LIBRARY='"$(m2library)"'
 
+# Specifying the standard as C99 forces acceptance of the traditional
+# (non-ANSI) prototypes and function arguments that m2c uses, but gcc
+# does not accept by default anymore.
+CFLAGS+= -std=c99
+
+# The _POSIX_C_SOURCE macro is defined to 199309L to enable the use of
+# the kill function.
+CFLAGS+= -D_POSIX_C_SOURCE=199309L
+
 # Utility for convertion of archives to random libraries.
 RANLIB=ranlib
 
