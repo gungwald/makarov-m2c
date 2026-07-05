@@ -24,7 +24,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
-#include <signal.h>
+#include <signal.h>      /* for kill, which also requires _POSIX_C_SOURCE to be defined */
 #include <setjmp.h>
 
 static int all_flag; /* -all */
@@ -1532,6 +1532,28 @@ Modula_to_C (arg)
   return okay;
 }
 
+/* The following function adds some flags to the command line for C
+   compilation.  The flags are needed for the latest gcc version to
+   compile the older code style of m2c. */
+
+static void
+add_gcc_flags(VLS *c_argument_vector)
+{
+  char *c99;
+  // char *posix;
+  char *implicit_decl;
+  char *implicit_int;
+
+  c99 = "-std=c99";
+  // posix = "-D_POSIX_C_SOURCE=200112L"; /* Other values: 199309L, 200112L, 200809L */
+  implicit_decl = "-Wno-implicit-function-declaration";
+  implicit_int = "-Wno-implicit-int";
+  VLS_ADD_MEMORY (*c_argument_vector, &c99, sizeof (char *));
+  // VLS_ADD_MEMORY (C_argument_vector, &posix, sizeof (char *));
+  VLS_ADD_MEMORY (*c_argument_vector, &implicit_decl, sizeof (char *));
+  VLS_ADD_MEMORY (*c_argument_vector, &implicit_int, sizeof (char *));
+}
+
 /* The following function processes C file according to the translator command
    line options.  For example it may be creation of object file or assembler
    file.  The processed file name is INPUT_FILE_NAME and is
@@ -1555,15 +1577,12 @@ C_compilation (after_modula, input_file_name, original_argument_number)
   char *C_presentation_of_flag_name, *parameter;
   char *output_file_name, *str, *name_without_suffix;
   int flag_is_ordered, ordered_flag_start;
-  char *c99, *posix;
 
   VLS_CREATE (C_argument_vector, 100);
   str = C_COMPILER;
   VLS_ADD_MEMORY (C_argument_vector, &str, sizeof (char *));
-  c99 = "-std=c99";
-  posix = "-D_POSIX_C_SOURCE=199309L";
-  VLS_ADD_MEMORY (C_argument_vector, &c99, sizeof (char *));
-  VLS_ADD_MEMORY (C_argument_vector, &posix, sizeof (char *));
+  if (strcmp(str,"gcc") == 0)
+    add_gcc_flags(&C_argument_vector);
   /* Add all additional flags for C. */
   for (i = 0;; i++)
     {

@@ -20,6 +20,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include <unistd.h> /* for unlink */
 
 #define FALSE 0
 #define TRUE 1

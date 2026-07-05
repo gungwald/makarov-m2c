@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="BackendCodeEditorMiscSettings">
+    <option name="/Default/Housekeeping/LiveTemplatesHousekeeping/HotspotSessionHintIsShown/@EntryValue" value="true" type="bool" />
     <option name="/Default/Housekeeping/OptionsDialog/SelectedPageId/@EntryValue" value="CppGeneralOptions" type="string" />
   </component>
   <component name="BackgroundAgentGlobalSettings">
@@ -31,10 +32,10 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd835709-65f3-42e9-a72c-83f0480aaedc" name="Changes" comment="Make func protos &amp; defs ANSI because gcc requires it (part 4)&#10;&#10;Also added guards around all header files">
-      <change beforePath="$PROJECT_DIR$/Makefile.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile.tmpl" afterDir="false" />
+    <list default="true" id="dd835709-65f3-42e9-a72c-83f0480aaedc" name="Changes" comment="Added -std=c99 and other changes">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/m2-main.c" beforeDir="false" afterPath="$PROJECT_DIR$/m2-main.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/m2-type-size.c" beforeDir="false" afterPath="$PROJECT_DIR$/m2-type-size.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/m2lib.h" beforeDir="false" afterPath="$PROJECT_DIR$/m2lib.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,6 +119,7 @@
     "Makefile Target.clean.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Native Application.all (1).executor": "Run",
+    "Native Application.distclean.executor": "Run",
     "Native Application.m2c.executor": "Debug",
     "RunOnceActivity.RadMigrateCodeStyle": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -237,8 +239,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Makefile Target.all" />
-        <item itemvalue="Makefile Target.clean" />
         <item itemvalue="Shell Script.configure" />
+        <item itemvalue="Makefile Target.clean" />
         <item itemvalue="Makefile Target.all" />
         <item itemvalue="Makefile Target.all" />
       </list>
@@ -251,7 +253,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1782920865657</updated>
-      <workItem from="1782920894892" duration="67627000" />
+      <workItem from="1782920894892" duration="87373000" />
     </task>
     <task id="LOCAL-00001" summary="Make a clion project">
       <option name="closed" value="true" />
@@ -309,11 +311,22 @@
       <option name="project" value="LOCAL" />
       <updated>1783190648757</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Added -std=c99 and other changes">
+      <option name="closed" value="true" />
+      <created>1783204076147</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1783204076147</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.def" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -334,7 +347,8 @@
     <MESSAGE value="Make func protos &amp; defs ANSI because gcc requires it (part 2)" />
     <MESSAGE value="Make func protos &amp; defs ANSI because gcc requires it (part 3)&#10;&#10;Also added guards around all header files" />
     <MESSAGE value="Make func protos &amp; defs ANSI because gcc requires it (part 4)&#10;&#10;Also added guards around all header files" />
-    <option name="LAST_COMMIT_MESSAGE" value="Make func protos &amp; defs ANSI because gcc requires it (part 4)&#10;&#10;Also added guards around all header files" />
+    <MESSAGE value="Added -std=c99 and other changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added -std=c99 and other changes" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
