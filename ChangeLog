@@ -1,6 +1,16 @@
+Mon Jul  6 01:06:24 AM EDT 2026 Bill Chatfield github.com/gungwald
+
+    * Updated to version 0.7.1.
+    * Copied, with history, from sv.gnu.org/projects/m2c/ to
+      github.com/gungwald/makarov-m2c. It's not intended to be a fork,
+      but rather a continuation or mirror of the original project.
+    * Fixed compilation with newer versions of gcc which don't allow
+      traditional C-style function declarations by default.
+    * Available at github.com/gungwald/makarov-m2c
+
 Thu Sep 25 10:00:42 2014  D. E. Evans <sinuhe@gnu.org>
 
-Changes since 0.6 are noted in the git log at sv.gnu.org/projects/m2c/
+    Changes since 0.6 are noted in the git log at sv.gnu.org/projects/m2c/
 
 Sun Oct 26 15:01:11 1997  Vladimir N. Makarov  <vladimir@localhost>
 
@@ -10,7 +20,7 @@ Sun Oct 26 15:01:11 1997  Vladimir N. Makarov  <vladimir@localhost>
 Fri Dec  9 21:33:34 1994  Vladimir Makarov  <vladimir@darkstar>
 
 	* New version 0.5 was fixed.  Install means preliminary uninstall
-	in `Makefile.tmpl'.  Some unsignificant changes in
+	in `Makefile.tmpl'.  Some insignificant changes in
 	`m2-type-size.c'.
 
 Wed Jun 30 03:52:36 1993  Vladimir  (vladimir@hwruss1)

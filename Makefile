@@ -1,3 +1,4 @@
+# This file is generated automatically! Change `Makefile.tmpl'!
 #
 # This file is part of Modula-2 translator.
 #
@@ -13,7 +14,7 @@ distdir = m2c-0.7
 
 # The directory for the sources being compiled.
 # The value of this varaible is set up by `configure'.
-srcdir=.
+srcdir = .
 
 # Use only full path name for the directories bindir, libdir, man1dir !
 # Common prefix for installation directories.

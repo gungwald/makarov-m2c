@@ -32,10 +32,15 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd835709-65f3-42e9-a72c-83f0480aaedc" name="Changes" comment="Added -std=c99 and other changes">
+    <list default="true" id="dd835709-65f3-42e9-a72c-83f0480aaedc" name="Changes" comment="C arguments to shut off errors about old-style code">
+      <change afterPath="$PROJECT_DIR$/m2-version.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ChangeLog" beforeDir="false" afterPath="$PROJECT_DIR$/ChangeLog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Makefile.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/Makefile.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/m2-main.c" beforeDir="false" afterPath="$PROJECT_DIR$/m2-main.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/m2lib.h" beforeDir="false" afterPath="$PROJECT_DIR$/m2lib.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/m2c.spec" beforeDir="false" afterPath="$PROJECT_DIR$/m2c.spec" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,10 +107,10 @@
     <option name="minorVersion" value="1.3" />
     <option name="productBranch" value="Classic" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="3FuNAIohKBYlHY3kSN82JARUODU" />
   <component name="ProjectViewState">
     <option name="autoscrollFromSource" value="true" />
@@ -125,6 +130,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.readMode.enableVisualFormatting": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHELLCHECK.PATH": "/home/bill/.local/share/JetBrains/CLion2026.1/Shell Script/shellcheck",
@@ -145,11 +151,6 @@
   }
 }]]></component>
   <component name="RunManager" selected="Makefile Target.all">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="TAGS" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="makarov-m2c" TARGET_NAME="TAGS" CONFIG_NAME="TAGS" version="1" RUN_TARGET_PROJECT_NAME="makarov-m2c" RUN_TARGET_NAME="TAGS">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
@@ -193,6 +194,11 @@
     <configuration name="uninstall" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="makarov-m2c" TARGET_NAME="uninstall" CONFIG_NAME="uninstall" version="1" RUN_TARGET_PROJECT_NAME="makarov-m2c" RUN_TARGET_NAME="uninstall">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="all" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
@@ -253,7 +259,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1782920865657</updated>
-      <workItem from="1782920894892" duration="87373000" />
+      <workItem from="1782920894892" duration="88854000" />
+      <workItem from="1783313353133" duration="6570000" />
     </task>
     <task id="LOCAL-00001" summary="Make a clion project">
       <option name="closed" value="true" />
@@ -319,7 +326,15 @@
       <option name="project" value="LOCAL" />
       <updated>1783204076147</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="C arguments to shut off errors about old-style code">
+      <option name="closed" value="true" />
+      <created>1783274656688</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1783274656688</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -333,7 +348,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/force-acceptance-of-traditional-prototypes" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -348,7 +375,8 @@
     <MESSAGE value="Make func protos &amp; defs ANSI because gcc requires it (part 3)&#10;&#10;Also added guards around all header files" />
     <MESSAGE value="Make func protos &amp; defs ANSI because gcc requires it (part 4)&#10;&#10;Also added guards around all header files" />
     <MESSAGE value="Added -std=c99 and other changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added -std=c99 and other changes" />
+    <MESSAGE value="C arguments to shut off errors about old-style code" />
+    <option name="LAST_COMMIT_MESSAGE" value="C arguments to shut off errors about old-style code" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>

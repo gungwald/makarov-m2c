@@ -27,6 +27,8 @@
 #include <signal.h>      /* for kill, which also requires _POSIX_C_SOURCE to be defined */
 #include <setjmp.h>
 
+#include "m2-version.h"
+
 static int all_flag; /* -all */
 static int C_flag; /* -C */
 static int CM_flag; /* -CM */
@@ -215,7 +217,7 @@ main (int argc, char *argv[])
   if (strict_flag)
     only_upper_case_flag = TRUE;
   if (v_flag)
-    fprintf (stderr, "m2c version 0.4\n");
+    fprintf (stderr, "m2c version %s, built on %s, at %s\n", M2C_VERSION, M2C_BUILT_ON_DATE, M2C_BUILT_AT_TIME);
   if (!okay)
     m2c_exit (1);		/* Error on command line options. */
   SET_VALUE_FROM_ENVIRONMENT (m2_library_paths,
