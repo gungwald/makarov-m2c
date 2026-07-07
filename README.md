@@ -7,35 +7,102 @@ edition of the book, *PIM3*. High portability is achieved
 through intermediate translation into C99. POSIX-based systems are the 
 target platform.
 
+## License
+
+This program and its files, are licensed under the GPL2. See the COPYING 
+file for details.
+
+## Advantages Over the GNU Modula-2 Compiler (gm2)
+
+* It compiles in a few seconds, while gm2 takes many hours or days on
+older hardware.
+* It is more portable because it only requires a C99 compiler, while
+gm2 only supports certain platforms.
+* It is easier to install because it does not require a large number 
+of dependencies, while gm2 requires many libraries and tools.
+* It is easier to get it to compile successfully.
+
+No disrespect to the GNU Modula-2 Compiler. It is a good compiler.
+
+## History
+
+See the [ChangeLog](ChangeLog) file or git history for a detailed
+history of the project.
+
+| Year      | Person    |
+|:---:|:--:|
+| 2026      | Bill Chatfield |
+| 2016      | Xin Wang |
+| 2014-2015 | D. E. Evans |
+| 2014      | Peter De Wachter |
+| 1991-1997 | Vladimir N. Makarov |
+
 ## Build Instructions
 
-### Run the configure script
+### Requirements
 
-To specify where to find the sources, as an argument +srcdir to
-configure:
+* A C compiler that supports C99, such as TCC or GCC 4.9 or later.
+* GNU Make or compatible version. BSD Make has not been tested.
+* Archive utility (ar) for creating static libraries.
 
-     ../m2c-0.7/configure +srcdir=../m2c-0.7
+### Overview
 
-You can use option `+cc' if you wish that configure will not ask
+1. ./configure +cc=<compiler_name>
+2. make CC=<compiler> prefix=<install_path>
+3. make install prefix=<install_path>
+
+### Details
+
+#### Run the configure script
+
+The configure script argument `+srcdir`, which specifies 
+where to find the sources, causes the build to fail, so
+avoid using it until it is fixed.
+
+Use option `+cc` to prevent configure from asking
 about C compiler name. For example:
 
-      configure +cc=gcc
+    ./configure +cc=gcc
 
-This program and its files, unless otherwise noted, were originally
-licensed under the original GPL.
-
-### Run make
+#### Run make
 
 The ```configure```-script generated Makefile understands the variables:
 ```bindir```, ```libdir```, ```man1dir```, and ```prefix```. Use only the
 full path name for directories.
 
-           make install prefix=/usr/users/VHDL/mak
- 
+    make CC=gcc prefix=/usr/local
+
                            or
 
-           make install bindir=/usr/users/VHDL/mak/bin\
-                libdir=/usr/users/VHDL/mak/lib\
-                /usr/users/VHDL/mak/man/man1
+    make CC=gcc \
+        bindir=/usr/local/bin \
+        libdir=/usr/local/lib/m2c \
+        man1dir=/usr/local/man/man1 \
+        includedir=/usr/local/include/m2c
 
-### Run make install
+#### Run make install
+
+    sudo make install prefix=/usr/local
+
+                           or
+
+    sudo make install CC=gcc \
+        bin=/usr/local/bin \
+        lib=/usr/local/lib/m2c \
+        man1=/usr/local/man/man1 \
+        includedir=/usr/local/include/m2c
+
+
+## Binary Distribution
+
+* Fedora Linux (latest version only)
+
+    * Setup [RPM Sphere](https://rpmsphere.github.io/)
+    * Install the package `m2c`
+
+    ```
+    sudo dnf install m2c
+   ``` 
+
+* Any Linux - download
+  the latest release from the [Releases](releases) page.
