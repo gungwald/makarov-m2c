@@ -1,7 +1,10 @@
 config.status
-Makefile
 m2-config.h
+Makefile
 m2lib.a
 m2c
 *.o
 *~
+.idea/workspace.xml
+m2c-*.tar.gz
+

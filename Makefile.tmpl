@@ -46,6 +46,15 @@ CFLAGS= -O -g -I. -I$(srcdir) -I$(srcdir)/config\
  -DTEMPORARY_DIRECTORY='"$(tempdir)"'\
  -DM2_RUN_TIME_LIBRARY='"$(m2library)"'
 
+# Specifying the standard as C99 forces acceptance of the traditional
+# (non-ANSI) prototypes and function arguments that m2c uses, but gcc
+# does not accept by default anymore.
+CFLAGS+= -std=c99
+
+# The _POSIX_C_SOURCE macro is defined to 199309L to enable the use of
+# the kill function.
+CFLAGS+= -D_POSIX_C_SOURCE=199309L
+
 # Utility for convertion of archives to random libraries.
 RANLIB=ranlib
 
@@ -78,7 +87,7 @@ IMPF = $(srcdir)/ASCII.mod $(srcdir)/Files.mod $(srcdir)/InOut.mod\
 # Distribution header files used all source files of the translator `m2c'.
 COMMONDISTF=$(srcdir)/m2-common.h $(srcdir)/m2-errors.h\
             $(srcdir)/m2-icode.h $(srcdir)/m2-type-size.h\
-	    $(srcdir)/m2-library.h
+	    $(srcdir)/m2-library.h $(srcdir)/m2-version.h
 
 # All header files used all source files of the translator `m2c' .
 COMMON=$(COMMONDISTF) m2-config.h
@@ -98,7 +107,7 @@ M2LIBSF= $(srcdir)/m2l_setin.c $(srcdir)/m2l_nites.c\
          $(srcdir)/m2l_eq.c $(srcdir)/m2l_ne.c $(srcdir)/m2l_assarr.c\
          $(srcdir)/m2l_assstr.c $(srcdir)/m2l_cap.c $(srcdir)/m2l_halt.c\
          $(srcdir)/m2l_arrpar.c $(srcdir)/m2l_testptr.c $(srcdir)/m2l_rngovf.c\
-         $(srcdir)/m2l_cor.c $(srcdir)/m2lib.h
+        $(srcdir)/m2l_cor.c $(srcdir)/m2lib.h
 
 # ALL distribution files in source directory .
 DISTSF = $(M2CDISTSF) $(M2LIBSF) $(DEFF) $(IMPF) $(srcdir)/Makefile.tmpl\
@@ -118,6 +127,9 @@ M2F= m2-errors.o m2-main.o m2-icode.o m2-library.o m2-type-size.o\
 M2LIBPROC=m2l_setin.o m2l_nites.o m2l_eq.o m2l_ne.o m2l_assarr.o\
 	  m2l_assstr.o m2l_cap.o  m2l_halt.o m2l_arrpar.o m2l_testptr.o\
 	  m2l_rngovf.o m2l_cor.o
+
+M2C_VERSION := $(shell grep M2C_VERSION m2-version.h | cut -d' ' -f3 | tr -d '"')
+RELEASE_ZIP=m2c-$(M2C_VERSION).tar.gz
 
 
 # Creation of all object and executable files;
@@ -180,8 +192,8 @@ $(m2library): $(M2LIBPROC)
 # Creation of all object files and copying the translator
 # `m2c', `m2c.1', Modula-2 run time library, definition, implementation
 # standard modules and its object files to target directories.
-install: all uninstall $(libdir) $(bindir) $(man1dir)\
-         $(libdir)/$(m2library) $(bindir)/m2c $(man1dir)/m2c.1
+install: all uninstall $(libdir) $(bindir) $(man1dir) $(includedir)\
+	$(libdir)/$(m2library) $(bindir)/m2c $(man1dir)/m2c.1 $(includedir)/m2lib.h
 	$(INSTALLDATA) $(IMPF) $(DEFF) $(libdir)
 	$(INSTALLDATA) m2lib.h $(includedir)
 	for i in $(IMPF); do\
@@ -191,24 +203,30 @@ install: all uninstall $(libdir) $(bindir) $(man1dir)\
 
 # Delete the installed files and empty installation directories.
 uninstall:
-	-rm -f $(libdir)/$(m2library) $(bindir)/m2c $(man1dir)/m2c.1
+	-rm -f $(libdir)/$(m2library) $(bindir)/m2c $(man1dir)/m2c.1 $(includedir)/m2lib.h
 	-for i in $(DEFF); do\
           rm -f $(libdir)/`basename $$i`;\
-        done
+	done
 	-for i in $(IMPF); do\
           rm -f $(libdir)/`basename $$i`;\
           rm -f $(libdir)/`basename $$i .mod`.o;\
-        done
-	-rmdir $(libdir) $(bindir) $(man1dir)
+	done
+	-for i in $(includedir)/m2lib.h; do\
+          rm -f $$i;\
+    done
+	-rmdir $(libdir) $(bindir) $(man1dir) $(includedir)
 
 $(libdir):
-	mkdir $(libdir)
+	mkdir -p $(libdir)
 
 $(bindir):
-	mkdir $(bindir)
+	mkdir -p $(bindir)
 
 $(man1dir):
-	mkdir $(man1dir)
+	mkdir -p $(man1dir)
+
+$(includedir):
+	mkdir -p $(includedir)
 
 $(libdir)/$(m2library): $(m2library)
 	$(INSTALLDATA) $(m2library) $(libdir)/$(m2library)
@@ -220,8 +238,11 @@ $(bindir)/m2c: m2c
 $(man1dir)/m2c.1:
 	$(INSTALLDATA) $(srcdir)/m2c.1 $(man1dir)/m2c.1
 
+$(includedir)/m2lib.h:
+	$(INSTALLDATA) $(srcdir)/m2lib.h $(includedir)/m2lib.h
+
 clean: modclean
-	rm -f $(M2F) m2c $(M2LIBPROC) $(m2library)
+	rm -f $(M2F) m2c $(M2LIBPROC) $(m2library) $(RELEASE_ZIP) $(distdir).tar.gz
 
 distclean: clean
 	rm -f config.status m2-config.h Makefile
@@ -245,3 +266,7 @@ dist:
 # Deletion of object files of standard modules.
 modclean:
 	for i in $(IMPF); do rm -f `basename $$i .mod`.o; done
+
+release:
+	tar --absolute-names -cvf - $(bindir)/m2c $(libdir) $(man1dir)/m2c.1 $(includedir)/m2lib.h \
+	| gzip -c > $(RELEASE_ZIP)
