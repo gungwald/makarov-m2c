@@ -105,7 +105,7 @@ full path name for directories.
       ``` 
 
 * Any Linux - download
-  the latest release from the [Releases](releases) page.
+  the latest release from the [Releases](https://github.com/gungwald/makarov-m2c/releases) page.
 
 ## Documentation
 
