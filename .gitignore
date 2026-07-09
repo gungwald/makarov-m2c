@@ -6,5 +6,5 @@ m2c
 *.o
 *~
 .idea/workspace.xml
-m2c-*.tar.gz
+*m2c-*.tar.gz
 

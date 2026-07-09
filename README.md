@@ -100,9 +100,45 @@ full path name for directories.
     * Setup [RPM Sphere](https://rpmsphere.github.io/)
     * Install the package `m2c`
 
-    ```
-    sudo dnf install m2c
-   ``` 
+      ```
+      sudo dnf install m2c
+      ``` 
 
 * Any Linux - download
   the latest release from the [Releases](releases) page.
+
+## Documentation
+
+This is a link to Nicholas Wirth's *Programming in Modula-2*,
+4th edition,
+which is the exact version of the language that this compiler
+implements:
+
+https://freepages.modula2.org/report4/modula-2.html
+
+## Code
+
+```modula-2
+MODULE HelloWorld;
+
+FROM InOut IMPORT WriteString, WriteLn;
+
+BEGIN
+    WriteString("Hello world!");
+    WriteLn;
+END HelloWorld.
+```
+
+## Compiling
+
+Structure:
+```
+m2c -o <output_executable_name> -make <modula2_source_file>
+```
+
+Example:
+```bash
+$ m2c -o helloworld -make HelloWorld.mod
+$ ./helloworld 
+Hello world!
+```
