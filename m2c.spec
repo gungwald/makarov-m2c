@@ -20,7 +20,7 @@
 
 Name: m2c
 Summary: A Modula-2 (PIM4) to C translator
-Version: 0.7.1
+Version: 0.7.2
 Release: 1
 License: GPLv2+
 Packager: %packer

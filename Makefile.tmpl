@@ -36,8 +36,15 @@ tempdir=/tmp
 # The directory for installation of `m2c.1'.
 man1dir=$(prefix)/man/man1
 
+# The directory for documentation.
+docdir=$(prefix)/share/doc/m2c
+
 # The name of Modula-2 run time library.
 m2library=m2lib.a
+
+TUTOR=modula-2-tutor-by-g-dodrill.pdf
+PIM4=pgm-in-modula-2-4th-ed-by-n-wirth.md
+DOCS=README.md COPYING ChangeLog doc/$(TUTOR) doc/$(PIM4)
 
 # C compiler and its flag used for compilation of C files.
 CC=gcc
@@ -129,7 +136,7 @@ M2LIBPROC=m2l_setin.o m2l_nites.o m2l_eq.o m2l_ne.o m2l_assarr.o\
 	  m2l_rngovf.o m2l_cor.o
 
 M2C_VERSION := $(shell grep M2C_VERSION m2-version.h | cut -d' ' -f3 | tr -d '"')
-RELEASE_ZIP=m2c-$(M2C_VERSION).tar.gz
+RELEASE_ZIP=makarov-m2c-$(M2C_VERSION).tar.gz
 
 
 # Creation of all object and executable files;
@@ -192,14 +199,15 @@ $(m2library): $(M2LIBPROC)
 # Creation of all object files and copying the translator
 # `m2c', `m2c.1', Modula-2 run time library, definition, implementation
 # standard modules and its object files to target directories.
-install: all uninstall $(libdir) $(bindir) $(man1dir) $(includedir)\
+install: all uninstall $(libdir) $(bindir) $(man1dir) $(includedir) $(docdir)\
 	$(libdir)/$(m2library) $(bindir)/m2c $(man1dir)/m2c.1 $(includedir)/m2lib.h
 	$(INSTALLDATA) $(IMPF) $(DEFF) $(libdir)
 	$(INSTALLDATA) m2lib.h $(includedir)
+	$(INSTALLDATA) $(DOCS) $(docdir)
 	for i in $(IMPF); do\
          $(INSTALLDATA) `basename $$i .mod`.o\
-            $(libdir)/$i`basename $$i .mod`.o;\
-        done
+         $(libdir)/$i`basename $$i .mod`.o;\
+    done
 
 # Delete the installed files and empty installation directories.
 uninstall:
@@ -214,7 +222,10 @@ uninstall:
 	-for i in $(includedir)/m2lib.h; do\
           rm -f $$i;\
     done
-	-rmdir $(libdir) $(bindir) $(man1dir) $(includedir)
+	-for i in $(DOCS); do\
+          rm -f $(docdir)/`basename $$i`;\
+	done
+	-rmdir $(libdir) $(bindir) $(man1dir) $(includedir) $(docdir)
 
 $(libdir):
 	mkdir -p $(libdir)
@@ -227,6 +238,9 @@ $(man1dir):
 
 $(includedir):
 	mkdir -p $(includedir)
+
+$(docdir):
+	mkdir -p $(docdir)
 
 $(libdir)/$(m2library): $(m2library)
 	$(INSTALLDATA) $(m2library) $(libdir)/$(m2library)
@@ -258,9 +272,9 @@ dist:
 	rm -f -r $(distdir)/*
 	cp $(DISTSF) $(distdir)
 	-for i in $(ADDITIONAL_DIRECTORIES); do\
-	 mkdir $(distdir)/`basename $$i`;\
-	 cp $$i/* $(distdir)/`basename $$i`;\
-        done
+	    mkdir $(distdir)/`basename $$i`;\
+	    cp $$i/* $(distdir)/`basename $$i`;\
+    done
 	tar cf -  $(distdir) | gzip -c >$(distdir).tar.gz 
 
 # Deletion of object files of standard modules.
@@ -268,5 +282,5 @@ modclean:
 	for i in $(IMPF); do rm -f `basename $$i .mod`.o; done
 
 release:
-	tar --absolute-names -cvf - $(bindir)/m2c $(libdir) $(man1dir)/m2c.1 $(includedir)/m2lib.h \
+	tar -C / -cvf - $(bindir)/m2c $(libdir) $(man1dir)/m2c.1 $(includedir)/m2lib.h $(docdir)\
 	| gzip -c > $(RELEASE_ZIP)

@@ -30,3 +30,10 @@ sudo make install CC=gcc \
     includedir="$INCLUDEDIR" \
     man1dir="$MAN1DIR"
 
+make CC=gcc \
+    bindir="$BINDIR" \
+    libdir="$LIBDIR" \
+    includedir="$INCLUDEDIR" \
+    man1dir="$MAN1DIR" \
+    release
+
