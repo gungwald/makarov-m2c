@@ -109,12 +109,11 @@ full path name for directories.
 
 ## Documentation
 
-This is a link to Nicholas Wirth's *Programming in Modula-2*,
-4th edition,
-which is the exact version of the language that this compiler
-implements:
-
-https://freepages.modula2.org/report4/modula-2.html
+* A very good [Modula-2 Tutor](doc/modula-2-tutor-by-g-dodrill.pdf) by Gordon Dodrill in PDF format.
+* Nicholas Wirth's [Programming in Modula-2](https://freepages.modula2.org/report4/modula-2.html),
+4th edition (PIM4), which is the exact version of the language that this compiler
+implements. It has been converted to HTML so it is a good on-line reference.
+The original PDF is also available from the same site.
 
 ## Code
 
