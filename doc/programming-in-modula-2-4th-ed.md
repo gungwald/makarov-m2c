@@ -4,7 +4,7 @@ version of
 4th edition (PIM4), Niklaus Wirth's
 reference for the Modula-2, translated into English by David A. Wheeler.
 
-This book is under copyright by Springer-Verlag, Berlin, Heidelberg, 
-New York, 1991. It is made available here for educational purposes only.
-Please do not redistribute it.
+The book is under copyright by Springer-Verlag, Berlin, Heidelberg, 
+New York, 1991. That is why it is not included in this repository
+directly.
 

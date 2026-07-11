@@ -12,6 +12,14 @@ target platform.
 This program and its files, are licensed under the GPL2. See the COPYING 
 file for details.
 
+## Language Documentation
+
+* A very good [Modula-2 Tutor](doc/modula-2-tutor.pdf) by Gordon Dodrill in PDF format.
+* Nicholas Wirth's [Programming in Modula-2](doc/programming-in-modula-2-4th-ed.md),
+4th edition (PIM4), which is the exact version of the language that this compiler
+implements. It has been converted to HTML so it is a good on-line reference.
+The original PDF is also available from the same site.
+
 ## Advantages Over the GNU Modula-2 Compiler (gm2)
 
 * It compiles in a few seconds, while gm2 takes many hours or days on
@@ -106,14 +114,6 @@ full path name for directories.
 
 * Any Linux - download
   the latest release from the [Releases](https://github.com/gungwald/makarov-m2c/releases) page.
-
-## Documentation
-
-* A very good [Modula-2 Tutor](doc/modula-2-tutor-by-g-dodrill.pdf) by Gordon Dodrill in PDF format.
-* Nicholas Wirth's [Programming in Modula-2](https://freepages.modula2.org/report4/modula-2.html),
-4th edition (PIM4), which is the exact version of the language that this compiler
-implements. It has been converted to HTML so it is a good on-line reference.
-The original PDF is also available from the same site.
 
 ## Code
 
