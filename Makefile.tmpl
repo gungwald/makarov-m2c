@@ -256,7 +256,7 @@ $(includedir)/m2lib.h:
 	$(INSTALLDATA) $(srcdir)/m2lib.h $(includedir)/m2lib.h
 
 clean: modclean
-	rm -f $(M2F) m2c $(M2LIBPROC) $(m2library) $(RELEASE_ZIP) $(distdir).tar.gz
+	rm -f $(M2F) m2c $(M2LIBPROC) $(m2library) $(RELEASE_ZIP) $(distdir).tar.gz $(RELEASE_ZIP)
 
 distclean: clean
 	rm -f config.status m2-config.h Makefile
