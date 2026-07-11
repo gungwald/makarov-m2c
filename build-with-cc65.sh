@@ -5,7 +5,7 @@ BINDIR="$PREFIX"/bin
 LIBDIR="$PREFIX"/lib/m2c
 MAN1DIR="$PREFIX"/share/man/man1
 INCLUDEDIR="$PREFIX"/include
-CC=gcc
+CC=cl65
 
 if [ $# -gt 0 ]
 then
