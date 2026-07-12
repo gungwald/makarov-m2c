@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# shellcheck disable=SC2006
+
 #
 # Config script to tune m2c on machine-dependent things and on used C compiler.
 #   Copyright (C) 1993-1997 (see more details in file COPYING).
@@ -12,7 +14,7 @@
 #  on machine-dependent things and
 #  on used C compiler.
 #
-# Usage: configure +srcdir=SRCDIR +cc=CCOMPILER]
+# Usage: configure [+srcdir=SRCDIR] [+cc=CCOMPILER]
 #	 where
 #              SRCDIR is directory of sources,
 #                        for example /usr/local/src/m2c-0.7;
@@ -27,6 +29,8 @@
 # 	config.status is removed.
 #
 
+PATH="$PATH:bin"
+OS=`uname -s`
 
 corout_function=m2l_ascor
 config_file=m2-config.h
@@ -37,50 +41,45 @@ hard_link=ln;
 symbolic_link='ln -s';
 program_name=`basename "$0"`
 
-
-fail()
-{
-  echo "$program_name": $* 1>&2
-  exit 1
-}
+export PATH program_name OS
 
 
 temp_file=xxxxx;
 
 if test -f $temp_file
 then
-  fail Access to $temp_file is required. Please delete it and try again.
+  write-error "Please delete $temp_file and try again." && exit 1
 fi
 
 cpu=generic
-for arg in $*; do
+for arg in "$@"
+do
   case $arg in
-   +srcdir=* | srcdir=*)
-	srcdir=`echo $arg | sed -E 's/^\+?srcdir=//'`;
-	;;
-   +cc=* | cc=*)
-	C_compiler=`echo $arg | sed -E 's/^\+?cc=//'`;
-	;;
-   +cpu=* | cpu=*)
-	cpu=`echo $arg | sed -E 's/^\+?cpu=//'`;
-	;;
-   +nfp | +gas | +x)
-	;;
-   +*)
-        fail "Unrecognized option \`$arg'. Good bye."
-	;;
-   -*)
-        fail "Use + instead of - for starting option \`$arg'. Good bye."
-	;;
-   *)
-	cpu=$arg;
-	;;
+    +srcdir=* | srcdir=*)
+      srcdir=`echo $arg | sed -E 's/^\+?srcdir=//'`;
+      ;;
+    +cc=* | cc=*)
+      C_compiler=`echo $arg | sed -E 's/^\+?cc=//'`;
+      ;;
+    +cpu=* | cpu=*)
+      cpu=`echo $arg | sed -E 's/^\+?cpu=//'`;
+      ;;
+    +nfp | +gas | +x)
+      ;;
+    +*)
+      write-error "Unrecognized option \`$arg'. Good bye." && exit 1
+      ;;
+    -*)
+      write-error "Use + instead of - for starting option \`$arg'. Good bye." && exit 1
+      ;;
+    *)
+      cpu=$arg;
+      ;;
   esac
 done
-exit
 
 # Find the source files, if location was not specified.
-if test "$srcdir" = ''
+if is-empty "$srcdir"
 then
 	implicit_srcdir=1;
 	srcdir=.;
@@ -91,97 +90,103 @@ then
 fi
 
 # Test sources availability.
-if test ! -f ${srcdir}/m2-semantics.c
+if test ! -f "${srcdir}"/m2-semantics.c
 then
-	if test x$implicit_srcdir = x
+	if is-empty "$implicit_srcdir"
 	then
-	  fail "Can't find m2c sources in \`${srcdir}'."
+	  write-error "Can't find m2c sources in \`${srcdir}'." && exit 1
 	else
-	  fail "Can't find m2c sources in \`.' or \`..'."
+	  write-error "Can't find m2c sources in \`.' or \`..'." && exit 1
 	fi
 fi
 
 # Process argument CPU (source directory is already known).
-if canonical_name=`/bin/sh ${srcdir}/config.sub $cpu`
+if canonical_name=`get-cannonical-cpu "$cpu"`
 then
-        cpu=`echo $canonical_name | sed s/-.*//`;
+  cpu=`echo "$canonical_name" | sed s/-.*//`;
 else
-        exit 1;
+  exit 1;
 fi
 
 
-if test x$cpu = x
+if is-empty "$cpu"
 then
-	echo "$program_name: Machine is not defined." 1>&2;
-	echo "Good bye." 1>&2;
-	exit 1;
+	write-error "Machine is not defined." && exit 1
 fi
 
 
-if test x$C_compiler = x
+# If C compiler name was not specified, try to find it automatically.
+if is-empty "$C_compiler"
+then
+  if type gcc >/dev/null 2>&1
+  then
+    C_compiler=gcc
+    echo Found gcc
+  elif type egcc >/dev/null 2>&1
+  then
+    C_compiler=egcc
+    echo Found egcc
+  elif equals "$OS" "OpenBSD"
+  then
+    write-error "Install egcc and try again." && exit 1
+  fi
+fi
+
+if is-empty "$C_compiler"
 then
 	# `+cc' option was not specified. Ask C compiler name.
-	for i in ${srcdir}/config/*; do
+	for i in "${srcdir}"/config/*; do
 		case $i in
-		 ${srcdir}/config/${cpu}-*.h)
-			C_compiler_exists=x;
-			;;
-		 *)
-			;;
+      "${srcdir}"/config/"${cpu}"-*.h)
+        C_compiler_exists=x;
+        ;;
+      *)
+        ;;
 		esac
 	done
 
-	if test x$C_compiler_exists = x
+	if is-empty "$C_compiler_exists"
 	then
-		echo "Tunning on C compiler for given machine does not exist."\
-			1>&2;
-		echo "Good bye." 1>&2;
-		exit 1;
+		write-error "C compiler for $cpu has not been configured." && exit 1
 	fi
 
 	echo "Enter name of C compiler. The possible names are:";
-	for i in ${srcdir}/config/${cpu}-*.h; do
-		echo `basename $i | sed "s/${cpu}-//" | sed "s/\\.h\$//"`;
+	for i in "${srcdir}"/config/"${cpu}"-*.h
+	do
+		basename "$i" | sed "s/${cpu}-//" | sed "s/\\.h\$//"
 	done
-        echo -n "	compiler? => ";
-	read C_compiler;
+
+  echo "Compiler?";
+  # shellcheck disable=SC2162
+  read C_compiler;
 fi
 
 config_template=${cpu}-${C_compiler}.h;
 
 # Test C compiler name.
-if test ! -f ${srcdir}/config/$config_template
+if test ! -f "${srcdir}"/config/"$config_template"
 then
-	echo "$program_name: file \`config/$config_template' does not exist."\
-		 1>&2;
-	echo "Good bye." 1>&2;
-	exit 1;
+	write-error "file \`config/$config_template' does not exist." && exit 1
 fi
 
 
 
 #------------------------------------------------
-# All is tested. Now generation.
+# Generate Makefile and config files
 #------------------------------------------------
 
 
-# Generate a makefile so that the sources are found (by changing value
-#  of srcdir).
-echo "# This file is generated automatically! Change \`Makefile.tmpl'!" \
-	 >Makefile;
-sed "s@^srcdir.*=.*\$@srcdir = ${srcdir}@" ${srcdir}/Makefile.tmpl >>Makefile;
+echo "# This file is generated automatically! Change \`Makefile.tmpl'!" >Makefile;
+sed "s@^srcdir.*=.*\$@srcdir = ${srcdir}@" "${srcdir}"/Makefile.tmpl >>Makefile;
 
-cat ${srcdir}/config/${config_template} >${config_file};
+cat "${srcdir}"/config/"${config_template}" >"${config_file}";
 
 # Assume coroutines (using makecontext/swapcontext) are always available.
-echo "#define COROUTINE_ENABLE" >>${config_file};
+echo "#define COROUTINE_ENABLE" >>"${config_file}";
 
-echo "m2c is now tuned on machine $cpu for use with a $C_compiler."\
-	 >$temp_file;
-echo "Directory of sources is \`$srcdir'. " $corout_message >>$temp_file;
+echo "m2c is now tuned on machine $cpu for use with a $C_compiler." >"$temp_file";
+echo "Directory of sources is \`$srcdir'. " $corout_message >>"$temp_file";
 
 
-cat $temp_file | tee config.status;
-$remove $temp_file;
-
-exit 0
+cat "$temp_file" | tee config.status;
+$remove "$temp_file";

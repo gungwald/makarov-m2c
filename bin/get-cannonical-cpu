@@ -1,6 +1,6 @@
 #!/bin/sh
 # Configuration validation subroutine script.
-#   Usage: config.sub CPU
+#   Usage: get-cannonical-cpu CPU
 #   Copyright (C) 1993-1997 (see more details in file COPYING).
 
 case $1 in
