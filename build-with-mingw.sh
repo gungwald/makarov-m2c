@@ -7,6 +7,12 @@ MAN1DIR="$PREFIX"/share/man/man1
 INCLUDEDIR="$PREFIX"/include
 CC=x86_64-w64-mingw32-gcc
 
+# Only run configure if Makefile.tmpl has been updated or it has not been run yet.
+if [ ! -f Makefile ] || [ Makefile.tmpl -nt Makefile ]
+then
+    ./configure +cc="$CC" || exit
+fi
+
 if [ $# -gt 0 ]
 then
   make CC="$CC" \
@@ -17,8 +23,6 @@ then
       "$1"
   exit
 fi
-
-./configure +cc="$CC" || exit
 
 make CC="$CC" \
     bindir="$BINDIR" \

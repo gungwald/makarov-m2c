@@ -35,45 +35,52 @@ move=mv;
 remove='rm -f';
 hard_link=ln;
 symbolic_link='ln -s';
+program_name=`basename "$0"`
 
-program_name=$0;
+
+fail()
+{
+  echo "$program_name": $* 1>&2
+  exit 1
+}
+
 
 temp_file=xxxxx;
 
 if test -f $temp_file
 then
-	echo "$program_name uses $temp_file as temporary file." 1>&2;
-	echo "Please, delete file $temp_file and try again. Good bye." 1>&2;
-	exit 1
+  fail Access to $temp_file is required. Please delete it and try again.
 fi
 
 cpu=generic
 for arg in $*; do
   case $arg in
-   +srcdir=*)
-	srcdir=`echo $arg | sed s/+srcdir=//`;
+   +srcdir=* | srcdir=*)
+	srcdir=`echo $arg | sed -E 's/^\+?srcdir=//'`;
 	;;
-   +cc=*)
-	C_compiler=`echo $arg | sed s/+cc=//`;
+   +cc=* | cc=*)
+	C_compiler=`echo $arg | sed -E 's/^\+?cc=//'`;
+	;;
+   +cpu=* | cpu=*)
+	cpu=`echo $arg | sed -E 's/^\+?cpu=//'`;
 	;;
    +nfp | +gas | +x)
 	;;
    +*)
-        echo "Unrecognized option \`$arg'. Good bye." 1>&2;
-        exit 1;
+        fail "Unrecognized option \`$arg'. Good bye."
 	;;
    -*)
-        echo "Use + instead of - for starting option \`$arg'. Good bye." 1>&2;
-        exit 1;
+        fail "Use + instead of - for starting option \`$arg'. Good bye."
 	;;
    *)
 	cpu=$arg;
 	;;
   esac
 done
+exit
 
 # Find the source files, if location was not specified.
-if test x$srcdir = x
+if test "$srcdir" = ''
 then
 	implicit_srcdir=1;
 	srcdir=.;
@@ -88,28 +95,19 @@ if test ! -f ${srcdir}/m2-semantics.c
 then
 	if test x$implicit_srcdir = x
 	then
-	  echo "$program_name: Can't find m2c sources in \`${srcdir}'." 1>&2;
+	  fail "Can't find m2c sources in \`${srcdir}'."
 	else
-	  echo "$program_name: Can't find m2c sources in \`.' or \`..'." 1>&2;
+	  fail "Can't find m2c sources in \`.' or \`..'."
 	fi
-	exit 1;
 fi
 
 # Process argument CPU (source directory is already known).
-for arg in $*; do
-  case $arg in
-   +srcdir=* | +cc=* | +nfp | +gas | +x | +* | -*)
-	;;
-   *)
-	if canonical_name=`/bin/sh ${srcdir}/config.sub $arg`
-	then
-		cpu=`echo $canonical_name | sed s/-.*//`;
-	else
-		exit 1;
-	fi
-	;;
-  esac
-done
+if canonical_name=`/bin/sh ${srcdir}/config.sub $cpu`
+then
+        cpu=`echo $canonical_name | sed s/-.*//`;
+else
+        exit 1;
+fi
 
 
 if test x$cpu = x

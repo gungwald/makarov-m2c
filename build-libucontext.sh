@@ -1,0 +1,28 @@
+#!/bin/sh
+
+CPU_TYPE=`uname -m`
+case "$CPU_TYPE" in
+    'i386') ARCH=x86 ;;
+    'macppc') ARCH=ppc ;;
+esac
+
+if [ -d '../libucontext' ]
+then
+    cd ../libucontext
+else
+    cd ..
+    git clone git@github.com:kaniini/libucontext.git
+    cd libucontext
+fi
+
+gmake ARCH="$ARCH" FREESTANDING=yes EXPORT_UNPREFIXED=yes || exit
+
+# This does not work because headers are in /usr/include/libucontext not /usr/include...
+#gmake ARCH="$ARCH" FREESTANDING=yes EXPORT_UNPREFIXED=yes check || exit
+
+doas gmake ARCH="$ARCH" install
+
+# Stupid
+doas ln -s /usr/include/libucontext/libucontext.h /usr/include/libucontext/ucontext.h
+
+

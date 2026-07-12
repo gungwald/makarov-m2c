@@ -1,48 +1,21 @@
 #!/bin/ksh
 
-# OpenBSD inappropriately installs all its prebuilt packages into /usr/local
-# so we want to put it somewhere other than /usr/local because this is not
-# package installed with pkg_add.
-
-PREFIX=/opt/makarov/m2c
-BINDIR="$PREFIX"/bin
-LIBDIR="$PREFIX"/lib/m2c
-MAN1DIR="$PREFIX"/share/man/man1
-INCLUDEDIR="$PREFIX"/include
-CC=gcc
-
-# I don't know OpenBSD renames gcc to egcc
-alias gcc=egcc
-
-if [ $# -gt 0 ]
+if [ ! -f /usr/include/libucontext/ucontext.h ] || [ ! -f /usr/lib/libucontext.a ]
 then
-  make CC="$CC" \
-      bindir="$BINDIR" \
-      libdir="$LIBDIR" \
-      man1dir="$MAN1DIR" \
-      includedir="$INCLUDEDIR" \
-      "$1"
-  exit
+    echo Run build-libucontext.sh or build/install libucontext first.
+    exit
 fi
 
-./configure +cc="$CC" || exit
+# OpenBSD inappropriately installs all its prebuilt packages into /usr/local
+# but we're stuck with that unless we force the user to update PATH and
+# specify the includes and libs on every command...
 
-make CC="$CC" \
-    bindir="$BINDIR" \
-    libdir="$LIBDIR" \
-    includedir="$INCLUDEDIR" \
-    man1dir="$MAN1DIR" || exit
+PREFIX=/usr/local
+BINDIR="$PREFIX"/bin
+LIBDIR="$PREFIX"/libdata/m2c
+MAN1DIR="$PREFIX"/man/man1
+INCLUDEDIR="$PREFIX"/include
+DOCDIR="$PREFIX"/share/doc/m2c
+LDFLAGS='-L/usr/lib/libucontext -lucontext'
 
-sudo make install CC="$CC" \
-    bindir="$BINDIR" \
-    libdir="$LIBDIR" \
-    includedir="$INCLUDEDIR" \
-    man1dir="$MAN1DIR" || exit
-
-make CC="$CC" \
-    bindir="$BINDIR" \
-    libdir="$LIBDIR" \
-    includedir="$INCLUDEDIR" \
-    man1dir="$MAN1DIR" \
-    release
-
+. ./build-common.sh

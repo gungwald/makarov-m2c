@@ -16,9 +16,28 @@
  * with m2c. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef __OpenBSD__
+/* github.com/kaniini/libucontext has to be installed */
+#include <libucontext/libucontext.h>
+#else
 #include <ucontext.h>
+#endif
+
 #include <stdio.h>
 #include "m2lib.h"
+
+/* This is needed for some platforms like OpenBSD which don't include these
+   functions which have been removed from POSIX. The standalone libucontext
+   library doesn't provide unprefixed function names, even though it claims
+   that it will. */
+
+#ifdef LIBUCONTEXT_LIBUCONTEXT_H
+#define ucontext_t libucontext_ucontext_t
+#define getcontext(c) libucontext_getcontext(c);
+#define makecontext(c,f,n) libucontext_makecontext(c,f,n)
+#define setcontext(c) libucontext_setcontext(c)
+#define swapcontext(c1,c2) libucontext_swapcontext(c1,c2);
+#endif
 
 static ucontext_t *
 prepare_context (void)
