@@ -28,26 +28,26 @@ srcdir = .
 # Use only full path name for the directories bindir, libdir, man1dir !
 # Common prefix for installation directories.
 # NOTE: this directory must exist when you start installation.
-prefix = /usr/local
+prefix = /fred/fred
 
 # The directory for installation of `m2c'.
-bindir = /usr/local/bin
+bindir = /fred/fred/bin
 
 # The directory for installation of Modula-2 run time library and 
 # definition, implementation standard modules and its object files.
-libdir = /usr/local/lib/m2c
+libdir = /fred/fred/lib/m2c
 
 # The include file directory, for the m2lib.h header
-includedir = /usr/local/include
+includedir = /fred/fred/include
 
 # The directory used by `m2c' for storing temporary files.
 tempdir=/tmp
 
 # The directory for installation of `m2c.1'.
-man1dir = /usr/local/share/man/man1
+man1dir = /fred/fred/share/man/man1
 
 # The directory for documentation.
-docdir = /usr/local/share/doc/m2c
+docdir = /fred/fred/opt/m2c/doc
 
 # The name of Modula-2 run time library.
 m2library=m2lib.a

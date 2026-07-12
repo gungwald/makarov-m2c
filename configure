@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # shellcheck disable=SC2006
+# shellcheck disable=SC2046
 
 #
 # Config script to tune m2c on machine-dependent things and on used C compiler.
@@ -29,7 +30,12 @@
 # 	config.status is removed.
 #
 
-# Using external shell scripts instead of functions to maintain backward compatibility with ancient shells.
+# Maintain backward compatibility with ancient shells like Ultrix version 2:
+# 1. Use external shell scripts instead of functions
+# 2. Simple BSD make syntax, no GNU make extensions
+# 3. Use only portable shell syntax, no bashisms
+# 4. Use only Basic Regular Expressions in sed and grep
+
 PATH="$PATH:bin"
 OS=`uname -s`
 config_file=m2-config.h
@@ -50,13 +56,31 @@ for arg in "$@"
 do
   case $arg in
     +srcdir=* | srcdir=*)
-      srcdir=`echo $arg | sed -E 's/^\+?srcdir=//'`;
+      srcdir=`echo $arg | sed 's/^+\{0,\}srcdir=//'`;
       ;;
     +cc=* | cc=*)
-      C_compiler=`echo $arg | sed -E 's/^\+?cc=//'`;
+      C_compiler=`echo $arg | sed 's/^+\{0,\}cc=//'`;
       ;;
     +cpu=* | cpu=*)
-      cpu=`echo $arg | sed -E 's/^\+?cpu=//'`;
+      cpu=`echo $arg | sed 's/^+\{0,\}cpu=//'`;
+      ;;
+    +prefix=* | prefix=*)
+      prefix=`echo $arg | sed 's/^+\{0,\}prefix=//'`;
+      ;;
+    +bindir=* | bindir=*)
+      bindir=`echo $arg | sed 's/^+\{0,\}bindir=//'`;
+      ;;
+    +libdir=* | libdir=*)
+      libdir=`echo $arg | sed 's/^+\{0,\}libdir=//'`;
+      ;;
+    +man1dir=* | man1dir=*)
+      man1dir=`echo $arg | sed 's/^+\{0,\}man1dir=//'`;
+      ;;
+    +includedir=* | includedir=*)
+      includedir=`echo $arg | sed 's/^+\{0,\}includedir=//'`;
+      ;;
+    +docdir=* | docdir=*)
+      docdir=`echo $arg | sed 's/^+\{0,\}docdir=//'`;
       ;;
     +nfp | +gas | +x)
       ;;
@@ -183,11 +207,11 @@ then
   # but we're stuck with that unless we force the user to update PATH and
   # specify the includes and libs on every command...
   PREFIX=/usr/local
-  BINDIR="$PREFIX"/bin
-  LIBDIR="$PREFIX"/libdata/m2c
-  MAN1DIR="$PREFIX"/man/man1
-  INCLUDEDIR="$PREFIX"/include
-  DOCDIR="$PREFIX"/share/doc/m2c
+  BINDIR=bin
+  LIBDIR=libdata/m2c
+  MAN1DIR=man/man1
+  INCLUDEDIR=include
+  DOCDIR=share/doc/m2c
   if test ! -f /usr/include/libucontext/ucontext.h || test ! -f /usr/lib/libucontext.a
   then
     write-error "libucontext is required on OpenBSD. Please install it and try again." && exit 1
@@ -200,27 +224,43 @@ elif equals "$OS" "Linux"
 then
   echo "Configuring installation directories for Linux." >> "$temp_file"
   PREFIX=/usr/local
-  BINDIR="$PREFIX"/bin
-  LIBDIR="$PREFIX"/lib/m2c
-  MAN1DIR="$PREFIX"/share/man/man1
-  INCLUDEDIR="$PREFIX"/include
-  DOCDIR="$PREFIX"/share/doc/m2c
+  BINDIR=bin
+  LIBDIR=lib/m2c
+  MAN1DIR=share/man/man1
+  INCLUDEDIR=include
+  DOCDIR=share/doc/m2c
 else
   echo "Configuring installation directories with default settings." >> "$temp_file"
   PREFIX=/usr/local
-  BINDIR="$PREFIX"/bin
-  LIBDIR="$PREFIX"/m2clib
-  MAN1DIR="$PREFIX"/man/man1
-  INCLUDEDIR="$PREFIX"/include
-  DOCDIR="$PREFIX"/share/doc/m2c
+  BINDIR=bin
+  LIBDIR=m2clib
+  MAN1DIR=man/man1
+  INCLUDEDIR=include
+  DOCDIR=share/doc/m2c
 fi
+
+# If the caller hasn't provided a value for any of the directories, use the defaults.
+is-empty "$prefix" && prefix="$PREFIX"
+is-empty "$bindir" && bindir="$prefix/$BINDIR"
+is-empty "$libdir" && libdir="$prefix/$LIBDIR"
+is-empty "$man1dir" && man1dir="$prefix/$MAN1DIR"
+is-empty "$includedir" && includedir="$prefix/$INCLUDEDIR"
+is-empty "$docdir" && docdir="$prefix/$DOCDIR"
+
+# If the caller has provided relative paths, prepend the prefix.
+equals `echo "$bindir" | cut -c1` "/" || bindir="$prefix/$bindir"
+equals `echo "$libdir" | cut -c1` "/" || libdir="$prefix/$libdir"
+equals `echo "$man1dir" | cut -c1` "/" || man1dir="$prefix/$man1dir"
+equals `echo "$includedir" | cut -c1` "/" || includedir="$prefix/$includedir"
+equals `echo "$docdir" | cut -c1` "/" || docdir="$prefix/$docdir"
+
 # shellcheck disable=SC2129
-echo PREFIX=/usr/local >> "$temp_file"
-echo BINDIR="$PREFIX"/bin >> "$temp_file"
-echo LIBDIR="$PREFIX"/m2clib >> "$temp_file"
-echo MAN1DIR="$PREFIX"/man/man1 >> "$temp_file"
-echo INCLUDEDIR="$PREFIX"/include >> "$temp_file"
-echo DOCDIR="$PREFIX"/share/doc/m2c >> "$temp_file"
+echo prefix="$prefix" >> "$temp_file"
+echo bindir="$bindir" >> "$temp_file"
+echo libdir="$libdir" >> "$temp_file"
+echo man1dir="$man1dir" >> "$temp_file"
+echo includedir="$includedir" >> "$temp_file"
+echo docdir="$docdir" >> "$temp_file"
 
 M2C_VERSION=`grep M2C_VERSION m2-version.h | cut -d' ' -f3 | tr -d '"'`
 
@@ -233,14 +273,14 @@ echo "# This file is generated automatically! Change \`Makefile.tmpl' and then r
 # The following format of multiple sed commands in a pipeline is the only
 # one that is supported by BSD and ancient systems like Ultrix. It is inefficient
 # but it is portable.
-sed "s/^srcdir.*=.*\$/srcdir = ${srcdir}/" "${srcdir}"/Makefile.tmpl \
-  | sed "s/^CC.*=.*\$/CC = ${C_compiler}/" \
-  | sed "s!^prefix.*=.*\$!prefix = ${PREFIX}!" \
-  | sed "s!^bindir.*=.*\$!bindir = ${BINDIR}!" \
-  | sed "s!^libdir.*=.*\$!libdir = ${LIBDIR}!" \
-  | sed "s!^man1dir.*=.*\$!man1dir = ${MAN1DIR}!" \
-  | sed "s!^includedir.*=.*\$!includedir = ${INCLUDEDIR}!" \
-  | sed "s!^docdir.*=.*\$!docdir = ${DOCDIR}!" \
+sed "s!^srcdir.*=.*\$!srcdir = ${srcdir}!" "${srcdir}"/Makefile.tmpl \
+  | sed "s!^CC.*=.*\$!CC = ${C_compiler}!" \
+  | sed "s!^prefix.*=.*\$!prefix = ${prefix}!" \
+  | sed "s!^bindir.*=.*\$!bindir = ${bindir}!" \
+  | sed "s!^libdir.*=.*\$!libdir = ${libdir}!" \
+  | sed "s!^man1dir.*=.*\$!man1dir = ${man1dir}!" \
+  | sed "s!^includedir.*=.*\$!includedir = ${includedir}!" \
+  | sed "s!^docdir.*=.*\$!docdir = ${docdir}!" \
   | sed "s!^M2C_VERSION.*=.*\$!M2C_VERSION = ${M2C_VERSION}!" \
   | sed "s!^EXTERN_CFLAGS.*=.*\$!EXTERN_CFLAGS = ${EXTERN_CFLAGS}!" \
   | sed "s!^EXTERN_LDFLAGS.*=.*\$!EXTERN_LDFLAGS = ${EXTERN_LDFLAGS}!" >> Makefile || exit
