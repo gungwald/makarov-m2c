@@ -7,9 +7,9 @@
 #
 SHELL=/bin/sh
 
-# Scrape the version string from m2-version.h so as not to have to copy it
-# here and everywhere.
-M2C_VERSION := $(shell grep M2C_VERSION m2-version.h | cut -d' ' -f3 | tr -d '"')
+# This is set by configure. Configure will have to be rerun if the version
+# is changed in m2-version.h.
+M2C_VERSION=
 
 # Name of the archive used for a github.com release.
 RELEASE_ZIP=makarov-m2c-$(M2C_VERSION).tar.gz
@@ -21,7 +21,7 @@ RELEASE_ZIP=makarov-m2c-$(M2C_VERSION).tar.gz
 distdir = m2c-$(M2C_VERSION)
 
 # The directory for the sources being compiled.
-# The value of this varaible is set up by `configure'.
+# The value of this variable is set up by `configure'.
 srcdir=.
 
 # Use only full path name for the directories bindir, libdir, man1dir !
@@ -55,6 +55,10 @@ DOCS=README.md COPYING ChangeLog doc/*
 
 # C compiler and its flag used for compilation of C files.
 CC=gcc
+
+# May be set by configure so don't remove
+EXTERN_CFLAGS=
+
 CFLAGS=$(EXTERN_CFLAGS)
 CFLAGS+= -O -g -I. -I$(srcdir) -I$(srcdir)/config\
  -DSTANDARD_LIBRARY_DIRECTORY='"$(libdir)"'\
@@ -69,6 +73,9 @@ CFLAGS+= -std=c99
 # The _POSIX_C_SOURCE macro is defined to 199309L to enable the use of
 # the kill function.
 CFLAGS+= -D_POSIX_C_SOURCE=199309L
+
+# May be set by configure so don't remove.
+EXTERN_LDFLAGS=
 
 LDFLAGS=$(EXTERN_LDFLAGS)
 
@@ -291,7 +298,7 @@ modclean:
             rm -f `basename $$i .mod`.o; \
         done
 
-release:
-	tar -C / -cvf - $(bindir)/m2c $(libdir) $(man1dir)/m2c.1 $(includedir)/m2lib.h $(docdir)\
-	| gzip -c > $(RELEASE_ZIP)
+release: install
+	tar -C / -cvf - $(bindir)/m2c $(libdir) $(man1dir)/m2c.1 $(includedir)/m2lib.h $(docdir) \
+	    | gzip -c > $(RELEASE_ZIP)
 

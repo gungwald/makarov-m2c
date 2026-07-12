@@ -29,22 +29,16 @@
 # 	config.status is removed.
 #
 
+# Using external shell scripts instead of functions to maintain backward compatibility with ancient shells.
 PATH="$PATH:bin"
 OS=`uname -s`
-
-corout_function=m2l_ascor
 config_file=m2-config.h
-
-move=mv;
 remove='rm -f';
-hard_link=ln;
-symbolic_link='ln -s';
 program_name=`basename "$0"`
-
-export PATH program_name OS
-
-
 temp_file=xxxxx;
+
+export PATH program_name OS temp_file
+
 
 if test -f $temp_file
 then
@@ -101,7 +95,7 @@ then
 fi
 
 # Process argument CPU (source directory is already known).
-if canonical_name=`get-cannonical-cpu "$cpu"`
+if canonical_name=`get-canonical-cpu "$cpu"`
 then
   cpu=`echo "$canonical_name" | sed s/-.*//`;
 else
@@ -121,14 +115,23 @@ then
   if type gcc >/dev/null 2>&1
   then
     C_compiler=gcc
-    echo Found gcc
+    echo Detected gcc
   elif type egcc >/dev/null 2>&1
   then
     C_compiler=egcc
-    echo Found egcc
-  elif equals "$OS" "OpenBSD"
+    echo Detected egcc
+  fi
+fi
+
+# Suggest which compiler to install.
+if is-empty "$C_compiler"
+then
+  if equals "$OS" "OpenBSD"
   then
     write-error "Install egcc and try again." && exit 1
+  elif equals "$OS" "Linux"
+  then
+    write-error "Install gcc and try again." && exit 1
   fi
 fi
 
@@ -170,22 +173,85 @@ then
 fi
 
 
+#------------------------------------------------
+# Directory setup
+#------------------------------------------------
+if equals "$OS" "OpenBSD"
+then
+  echo "Configuring installation directories for OpenBSD." >> "$temp_file"
+  # OpenBSD inappropriately installs all its prebuilt packages into /usr/local
+  # but we're stuck with that unless we force the user to update PATH and
+  # specify the includes and libs on every command...
+  PREFIX=/usr/local
+  BINDIR="$PREFIX"/bin
+  LIBDIR="$PREFIX"/libdata/m2c
+  MAN1DIR="$PREFIX"/man/man1
+  INCLUDEDIR="$PREFIX"/include
+  DOCDIR="$PREFIX"/share/doc/m2c
+  if test ! -f /usr/include/libucontext/ucontext.h || test ! -f /usr/lib/libucontext.a
+  then
+    write-error "libucontext is required on OpenBSD. Please install it and try again." && exit 1
+  else
+    echo "libucontext detected. Adding include and link flags." >> "$temp_file"
+    EXTERN_CFLAGS='-I/usr/include/libucontext'
+    EXTERN_LDFLAGS='-lucontext'
+  fi
+elif equals "$OS" "Linux"
+then
+  echo "Configuring installation directories for Linux." >> "$temp_file"
+  PREFIX=/usr/local
+  BINDIR="$PREFIX"/bin
+  LIBDIR="$PREFIX"/lib/m2c
+  MAN1DIR="$PREFIX"/share/man/man1
+  INCLUDEDIR="$PREFIX"/include
+  DOCDIR="$PREFIX"/share/doc/m2c
+else
+  echo "Configuring installation directories with default settings." >> "$temp_file"
+  PREFIX=/usr/local
+  BINDIR="$PREFIX"/bin
+  LIBDIR="$PREFIX"/m2clib
+  MAN1DIR="$PREFIX"/man/man1
+  INCLUDEDIR="$PREFIX"/include
+  DOCDIR="$PREFIX"/share/doc/m2c
+fi
+# shellcheck disable=SC2129
+echo PREFIX=/usr/local >> "$temp_file"
+echo BINDIR="$PREFIX"/bin >> "$temp_file"
+echo LIBDIR="$PREFIX"/m2clib >> "$temp_file"
+echo MAN1DIR="$PREFIX"/man/man1 >> "$temp_file"
+echo INCLUDEDIR="$PREFIX"/include >> "$temp_file"
+echo DOCDIR="$PREFIX"/share/doc/m2c >> "$temp_file"
+
+M2C_VERSION=`grep M2C_VERSION m2-version.h | cut -d' ' -f3 | tr -d '"'`
 
 #------------------------------------------------
 # Generate Makefile and config files
 #------------------------------------------------
 
 
-echo "# This file is generated automatically! Change \`Makefile.tmpl'!" >Makefile;
-sed "s@^srcdir.*=.*\$@srcdir = ${srcdir}@" "${srcdir}"/Makefile.tmpl >>Makefile;
+echo "# This file is generated automatically! Change \`Makefile.tmpl' and then run \`configure' again." >Makefile;
+# The following format of multiple sed commands in a pipeline is the only
+# one that is supported by BSD and ancient systems like Ultrix. It is inefficient
+# but it is portable.
+sed "s/^srcdir.*=.*\$/srcdir = ${srcdir}/" "${srcdir}"/Makefile.tmpl \
+  | sed "s/^CC.*=.*\$/CC = ${C_compiler}/" \
+  | sed "s!^prefix.*=.*\$!prefix = ${PREFIX}!" \
+  | sed "s!^bindir.*=.*\$!bindir = ${BINDIR}!" \
+  | sed "s!^libdir.*=.*\$!libdir = ${LIBDIR}!" \
+  | sed "s!^man1dir.*=.*\$!man1dir = ${MAN1DIR}!" \
+  | sed "s!^includedir.*=.*\$!includedir = ${INCLUDEDIR}!" \
+  | sed "s!^docdir.*=.*\$!docdir = ${DOCDIR}!" \
+  | sed "s!^M2C_VERSION.*=.*\$!M2C_VERSION = ${M2C_VERSION}!" \
+  | sed "s!^EXTERN_CFLAGS.*=.*\$!EXTERN_CFLAGS = ${EXTERN_CFLAGS}!" \
+  | sed "s!^EXTERN_LDFLAGS.*=.*\$!EXTERN_LDFLAGS = ${EXTERN_LDFLAGS}!" >> Makefile || exit
 
 cat "${srcdir}"/config/"${config_template}" >"${config_file}";
 
 # Assume coroutines (using makecontext/swapcontext) are always available.
 echo "#define COROUTINE_ENABLE" >>"${config_file}";
 
-echo "m2c is now tuned on machine $cpu for use with a $C_compiler." >"$temp_file";
-echo "Directory of sources is \`$srcdir'. " $corout_message >>"$temp_file";
+echo "m2c is now configured for use on a(n) $cpu machine with the $C_compiler compiler." >> "$temp_file";
+echo Source directory is: "$srcdir" >> "$temp_file";
 
 
 cat "$temp_file" | tee config.status;

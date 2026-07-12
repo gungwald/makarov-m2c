@@ -3,5 +3,4 @@
 # shellcheck disable=SC2086
 # shellcheck disable=SC2154
 echo "$program_name": $* 1>&2
-exit 1
 

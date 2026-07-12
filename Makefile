@@ -1,4 +1,4 @@
-# This file is generated automatically! Change `Makefile.tmpl'!
+# This file is generated automatically! Change `Makefile.tmpl' and then run `configure' again.
 #
 # This file is part of Modula-2 translator.
 #
@@ -8,48 +8,60 @@
 #
 SHELL=/bin/sh
 
+# This is set by configure. Configure will have to be rerun if the version
+# is changed in m2-version.h.
+M2C_VERSION = 0.7.2
+
+# Name of the archive used for a github.com release.
+RELEASE_ZIP=makarov-m2c-$(M2C_VERSION).tar.gz
+
 # The subdirectory used for copying sources and creation of 
-# compressed distribution tar file.
-distdir = m2c-0.7
+# compressed distribution tar file. Making a release on github.com has 
+# probably made this unnecessary, but let's keep it working in case someone 
+# wants to do it for some reason I don't know about.
+distdir = m2c-$(M2C_VERSION)
 
 # The directory for the sources being compiled.
-# The value of this varaible is set up by `configure'.
+# The value of this variable is set up by `configure'.
 srcdir = .
 
 # Use only full path name for the directories bindir, libdir, man1dir !
 # Common prefix for installation directories.
 # NOTE: this directory must exist when you start installation.
-prefix=/usr/local
+prefix = /usr/local
 
 # The directory for installation of `m2c'.
-bindir=$(prefix)/bin
+bindir = /usr/local/bin
 
 # The directory for installation of Modula-2 run time library and 
 # definition, implementation standard modules and its object files.
-libdir=$(prefix)/m2lib
+libdir = /usr/local/lib/m2c
 
 # The include file directory, for the m2lib.h header
-includedir=$(prefix)/include
+includedir = /usr/local/include
 
 # The directory used by `m2c' for storing temporary files.
 tempdir=/tmp
 
 # The directory for installation of `m2c.1'.
-man1dir=$(prefix)/man/man1
+man1dir = /usr/local/share/man/man1
 
 # The directory for documentation.
-docdir=$(prefix)/share/doc/m2c
+docdir = /usr/local/share/doc/m2c
 
 # The name of Modula-2 run time library.
 m2library=m2lib.a
 
-TUTOR=modula-2-tutor-by-g-dodrill.pdf
-PIM4=pgm-in-modula-2-4th-ed-by-n-wirth.md
-DOCS=README.md COPYING ChangeLog doc/$(TUTOR) doc/$(PIM4)
+DOCS=README.md COPYING ChangeLog doc/*
 
 # C compiler and its flag used for compilation of C files.
-CC=gcc
-CFLAGS= -O -g -I. -I$(srcdir) -I$(srcdir)/config\
+CC = gcc
+
+# May be set by configure so don't remove
+EXTERN_CFLAGS = 
+
+CFLAGS=$(EXTERN_CFLAGS)
+CFLAGS+= -O -g -I. -I$(srcdir) -I$(srcdir)/config\
  -DSTANDARD_LIBRARY_DIRECTORY='"$(libdir)"'\
  -DTEMPORARY_DIRECTORY='"$(tempdir)"'\
  -DM2_RUN_TIME_LIBRARY='"$(m2library)"'
@@ -62,6 +74,11 @@ CFLAGS+= -std=c99
 # The _POSIX_C_SOURCE macro is defined to 199309L to enable the use of
 # the kill function.
 CFLAGS+= -D_POSIX_C_SOURCE=199309L
+
+# May be set by configure so don't remove.
+EXTERN_LDFLAGS = 
+
+LDFLAGS=$(EXTERN_LDFLAGS)
 
 # Utility for convertion of archives to random libraries.
 RANLIB=ranlib
@@ -136,8 +153,6 @@ M2LIBPROC=m2l_setin.o m2l_nites.o m2l_eq.o m2l_ne.o m2l_assarr.o\
 	  m2l_assstr.o m2l_cap.o  m2l_halt.o m2l_arrpar.o m2l_testptr.o\
 	  m2l_rngovf.o m2l_cor.o
 
-M2C_VERSION := $(shell grep M2C_VERSION m2-version.h | cut -d' ' -f3 | tr -d '"')
-RELEASE_ZIP=makarov-m2c-$(M2C_VERSION).tar.gz
 
 
 # Creation of all object and executable files;
@@ -145,7 +160,7 @@ all: m2c $(m2library)
 	$(M2C) $(M2CFLAGS) $(IMPF)
 
 m2c: $(M2F)
-	$(CC) -o m2c $(CFLAGS) $(M2F)
+	$(CC) -o m2c $(CFLAGS) $(M2F) $(LDFLAGS)
 
 m2-errors.o: $(COMMON) $(srcdir)/m2-errors.c
 	$(CC) $(CFLAGS) -c $(srcdir)/m2-errors.c
@@ -206,9 +221,9 @@ install: all uninstall $(libdir) $(bindir) $(man1dir) $(includedir) $(docdir)\
 	$(INSTALLDATA) m2lib.h $(includedir)
 	$(INSTALLDATA) $(DOCS) $(docdir)
 	for i in $(IMPF); do\
-         $(INSTALLDATA) `basename $$i .mod`.o\
-         $(libdir)/$i`basename $$i .mod`.o;\
-    done
+		$(INSTALLDATA) `basename $$i .mod`.o\
+		$(libdir)/$i`basename $$i .mod`.o;\
+	done
 
 # Delete the installed files and empty installation directories.
 uninstall:
@@ -222,7 +237,7 @@ uninstall:
 	done
 	-for i in $(includedir)/m2lib.h; do\
           rm -f $$i;\
-    done
+	done
 	-for i in $(DOCS); do\
           rm -f $(docdir)/`basename $$i`;\
 	done
@@ -275,13 +290,16 @@ dist:
 	-for i in $(ADDITIONAL_DIRECTORIES); do\
 	    mkdir $(distdir)/`basename $$i`;\
 	    cp $$i/* $(distdir)/`basename $$i`;\
-    done
-	tar cf -  $(distdir) | gzip -c >$(distdir).tar.gz 
+	done
+	tar cf - $(distdir) | gzip -c > $(distdir).tar.gz 
 
 # Deletion of object files of standard modules.
 modclean:
-	for i in $(IMPF); do rm -f `basename $$i .mod`.o; done
+	for i in $(IMPF); do\
+            rm -f `basename $$i .mod`.o; \
+        done
 
-release:
-	tar -C / -cvf - $(bindir)/m2c $(libdir) $(man1dir)/m2c.1 $(includedir)/m2lib.h $(docdir)\
-	| gzip -c > $(RELEASE_ZIP)
+release: install
+	tar -C / -cvf - $(bindir)/m2c $(libdir) $(man1dir)/m2c.1 $(includedir)/m2lib.h $(docdir) \
+	    | gzip -c > $(RELEASE_ZIP)
+
