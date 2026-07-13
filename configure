@@ -248,12 +248,13 @@ is-empty "$includedir" && includedir="$prefix/$INCLUDEDIR"
 is-empty "$docdir" && docdir="$prefix/$DOCDIR"
 
 # If the caller has provided relative paths, prepend the prefix.
-equals `echo "$bindir" | cut -c1` "/" || bindir="$prefix/$bindir"
-equals `echo "$libdir" | cut -c1` "/" || libdir="$prefix/$libdir"
-equals `echo "$man1dir" | cut -c1` "/" || man1dir="$prefix/$man1dir"
-equals `echo "$includedir" | cut -c1` "/" || includedir="$prefix/$includedir"
-equals `echo "$docdir" | cut -c1` "/" || docdir="$prefix/$docdir"
+equals `first-char "$bindir"` "/" || bindir="$prefix/$bindir"
+equals `first-char "$libdir"` "/" || libdir="$prefix/$libdir"
+equals `first-char "$man1dir"` "/" || man1dir="$prefix/$man1dir"
+equals `first-char "$includedir"` "/" || includedir="$prefix/$includedir"
+equals `first-char "$docdir"` "/" || docdir="$prefix/$docdir"
 
+# Write out the final directory configuration to the temporary file for debugging purposes.
 # shellcheck disable=SC2129
 echo prefix="$prefix" >> "$temp_file"
 echo bindir="$bindir" >> "$temp_file"
@@ -294,5 +295,6 @@ echo "m2c is now configured for use on a(n) $cpu machine with the $C_compiler co
 echo Source directory is: "$srcdir" >> "$temp_file";
 
 
+# shellcheck disable=SC2002
 cat "$temp_file" | tee config.status;
 $remove "$temp_file";
