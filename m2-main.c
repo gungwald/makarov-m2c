@@ -1542,16 +1542,13 @@ static void
 add_gcc_flags(VLS *c_argument_vector)
 {
   char *c99;
-  // char *posix;
   char *implicit_decl;
   char *implicit_int;
 
   c99 = "-std=c99";
-  // posix = "-D_POSIX_C_SOURCE=200112L"; /* Other values: 199309L, 200112L, 200809L */
   implicit_decl = "-Wno-implicit-function-declaration";
   implicit_int = "-Wno-implicit-int";
   VLS_ADD_MEMORY (*c_argument_vector, &c99, sizeof (char *));
-  // VLS_ADD_MEMORY (C_argument_vector, &posix, sizeof (char *));
   VLS_ADD_MEMORY (*c_argument_vector, &implicit_decl, sizeof (char *));
   VLS_ADD_MEMORY (*c_argument_vector, &implicit_int, sizeof (char *));
 }

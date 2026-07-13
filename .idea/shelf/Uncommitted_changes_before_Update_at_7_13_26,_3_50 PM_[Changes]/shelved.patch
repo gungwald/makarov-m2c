@@ -1,0 +1,18 @@
+Index: m2l_cor.c
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>/* Run-time functions for Modula-2 coroutine implementation.\n * Copyright 1991, 1993, 1994, 1997 Vladimir Makarov\n * This file is part of m2c.\n *\n * m2c is free software: you can redistribute it and/or modify it under\n * the terms of the GNU General Public License as published by the Free\n * Software Foundation; either version 2 of the License, or (at your option)\n * any later version.\n *\n * m2c is distributed in the hope that it will be useful, but WITHOUT\n * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or\n * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License\n * for more details.\n *\n * You should have received a copy of the GNU General Public License along\n * with m2c. If not, see <http://www.gnu.org/licenses/>.\n */\n\n#ifdef __OpenBSD__\n/* github.com/kaniini/libucontext has to be installed */\n#include <libucontext/libucontext.h>\n#else\n#include <ucontext.h>\n#endif\n\n#include <stdio.h>\n#include \"m2lib.h\"\n\n/* This is needed for some platforms like OpenBSD which don't include these\n   functions which have been removed from POSIX. The standalone libucontext\n   library doesn't provide unprefixed function names, even though it claims\n   that it will. */\n\n#ifdef LIBUCONTEXT_LIBUCONTEXT_H\n#define ucontext_t libucontext_ucontext_t\n#define getcontext(c) libucontext_getcontext(c);\n#define makecontext(c,f,n) libucontext_makecontext(c,f,n)\n#define setcontext(c) libucontext_setcontext(c)\n#define swapcontext(c1,c2) libucontext_swapcontext(c1,c2);\n#endif\n\nstatic ucontext_t *\nprepare_context (void)\n{\n  ucontext_t *ctx;\n  int err;\n\n  ctx = malloc(sizeof(ucontext_t));\n  if (!ctx)\n    {\n      fputs(\"\\nno memory for coroutine context\", stderr);\n      m2_halt();\n    }\n\n  err = getcontext(ctx);\n  if (err != 0)\n    {\n      fputs(\"\\ngetcontext failed\", stderr);\n      m2_halt();\n    }\n\n  return ctx;\n}\n\nvoid\nm2_newprocess (void (*f) (), int *sp, unsigned int size, int **cor)\n{\n  ucontext_t *ctx = prepare_context();\n  ctx->uc_stack.ss_sp = sp;\n  ctx->uc_stack.ss_size = size;\n  ctx->uc_stack.ss_flags = 0;\n  ctx->uc_link = 0;\n  makecontext(ctx, f, 0);\n  *cor = (void *) ctx;\n}\n\nvoid\nm2_transfer (int **cor1, int **cor2)\n{\n  int err;\n\n  if (!*cor1)\n    *cor1 = (void *) prepare_context();\n\n  err = swapcontext((void *) *cor1, (void *) *cor2);\n  if (err != 0)\n    {\n      fputs(\"\\nswapcontext failed\", stderr);\n      m2_halt();\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/m2l_cor.c b/m2l_cor.c
+--- a/m2l_cor.c	(revision e4b74292541d3b7e005afcbcd890f379c26d1fb0)
++++ b/m2l_cor.c	(date 1783970596828)
+@@ -25,6 +25,7 @@
+ 
+ #include <stdio.h>
+ #include "m2lib.h"
++#include <signal.h>
+ 
+ /* This is needed for some platforms like OpenBSD which don't include these
+    functions which have been removed from POSIX. The standalone libucontext

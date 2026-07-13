@@ -53,4 +53,4 @@ extern int m2_setin (Tset s1, Tset s2);
 /* m2l_testptr.c */
 extern char *m2_testptr (char *ptr);
 
-#endif  // M2LIB_H
+#endif

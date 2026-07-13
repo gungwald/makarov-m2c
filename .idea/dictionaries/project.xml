@@ -2,7 +2,9 @@
   <dictionary name="project">
     <words>
       <w>egcc</w>
+      <w>makecontext</w>
       <w>srcdir</w>
+      <w>swapcontext</w>
     </words>
   </dictionary>
 </component>

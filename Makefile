@@ -28,26 +28,26 @@ srcdir = .
 # Use only full path name for the directories bindir, libdir, man1dir !
 # Common prefix for installation directories.
 # NOTE: this directory must exist when you start installation.
-prefix = /fred/fred
+prefix = /usr/local
 
 # The directory for installation of `m2c'.
-bindir = /fred/fred/bin
+bindir = /usr/local/bin
 
 # The directory for installation of Modula-2 run time library and 
 # definition, implementation standard modules and its object files.
-libdir = /fred/fred/lib/m2c
+libdir = /usr/local/lib/m2c
 
 # The include file directory, for the m2lib.h header
-includedir = /fred/fred/include
+includedir = /usr/local/include
 
 # The directory used by `m2c' for storing temporary files.
 tempdir=/tmp
 
 # The directory for installation of `m2c.1'.
-man1dir = /fred/fred/share/man/man1
+man1dir = /usr/local/share/man/man1
 
 # The directory for documentation.
-docdir = /fred/fred/opt/m2c/doc
+docdir = /usr/local/share/doc/m2c
 
 # The name of Modula-2 run time library.
 m2library=m2lib.a
@@ -151,13 +151,22 @@ M2F= m2-errors.o m2-main.o m2-icode.o m2-library.o m2-type-size.o\
 # All object files of the run-time library.
 M2LIBPROC=m2l_setin.o m2l_nites.o m2l_eq.o m2l_ne.o m2l_assarr.o\
 	  m2l_assstr.o m2l_cap.o  m2l_halt.o m2l_arrpar.o m2l_testptr.o\
-	  m2l_rngovf.o m2l_cor.o
+	  m2l_rngovf.o m2l_cor.o ucontext_stubs.o
 
 
+#############################################################################
+#
+# Rules for building the Modula-2 translator `m2c' and its run-time library.
+#
+#############################################################################
 
 # Creation of all object and executable files;
-all: m2c $(m2library)
+all: Makefile m2c $(m2library)
 	$(M2C) $(M2CFLAGS) $(IMPF)
+
+Makefile: $(srcdir)/Makefile.tmpl $(srcdir)/configure
+	@echo STOPPING: YOU MUST RERUN configure BECAUSE configure OR Makefile.tmpl HAS CHANGED. 1>&2
+	@exit 1
 
 m2c: $(M2F)
 	$(CC) -o m2c $(CFLAGS) $(M2F) $(LDFLAGS)
@@ -207,6 +216,9 @@ m2l_setin.o: m2lib.h $(srcdir)/m2l_setin.c
 	$(CC) $(CFLAGS) -c $(srcdir)/m2l_setin.c
 m2l_nites.o: m2lib.h $(srcdir)/m2l_nites.c
 	$(CC) $(CFLAGS) -c $(srcdir)/m2l_nites.c
+
+ucontext_stubs.o: $(srcdir)/ucontext_stubs.c $(srcdir)/ucontext_stubs.h
+	$(CC) $(CFLAGS) -c $(srcdir)/ucontext_stubs.c
 
 $(m2library): $(M2LIBPROC)
 	rm -f $(m2library)
