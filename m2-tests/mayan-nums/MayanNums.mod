@@ -1,10 +1,9 @@
 MODULE MayanNums;
 (* Mayan numerals *)
 
-FROM InOut IMPORT
-  ReadString, WriteLn, WriteString, WriteInt;
-FROM String IMPORT
-  Length;
+FROM InOut IMPORT ReadString, WriteLn, WriteString, WriteInt, WriteCard;
+FROM String IMPORT Copy, Length;
+FROM ShellVars IMPORT GetNArg, GetNthArgStr;
 
 CONST
   MaxM = 20; (* maximum number of digits *)
@@ -19,6 +18,24 @@ VAR
   I, J, L, M, S: CARDINAL;
   N: INTEGER;
   LS: TLS;
+
+PROCEDURE GetNumberFromUser(VAR InputNumber:ARRAY OF CHAR);
+VAR
+  ArgCount: CARDINAL;
+BEGIN
+  ArgCount := GetNArg();
+  WriteCard(ArgCount, 2);
+  WriteLn;
+  IF ArgCount > 1 THEN
+    GetNthArgStr(1, InputNumber);
+    WriteString(InputNumber);
+    WriteLn;
+  ELSE
+    WriteString("Number: ");
+    ReadString(InputNumber);
+  END;
+END GetNumberFromUser;
+
 BEGIN
   LS[0] := "    ";
   LS[1] := " .  ";
@@ -27,9 +44,9 @@ BEGIN
   LS[4] := "....";
   LS[5] := "----";
 
-  WriteString("Number: ");
-  ReadString(InputNumber);
+  GetNumberFromUser(InputNumber);
   M := Length(InputNumber);
+
   IF M > MaxM THEN M := MaxM END;
   FOR I := 1 TO M DO
     D[I] := ORD(InputNumber[I]) - ORD("0");
