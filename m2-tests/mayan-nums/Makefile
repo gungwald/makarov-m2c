@@ -22,5 +22,5 @@ $(C_FILE): $(MOD)
 	$(M2C) -v -C -g -o $@ -make $(MOD)
 
 clean:
-	rm -f $(PGM) *.o $(C_FILE) *.c~ *.h~ *.o~ core mayan-nums
+	rm -f $(PGM) *.o $(C_FILE) *.c~ *.h~ *.o~ core mayan-nums $(PGM).dbg
 
