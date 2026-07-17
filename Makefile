@@ -35,7 +35,7 @@ bindir = /usr/local/bin
 
 # The directory for installation of Modula-2 run time library and 
 # definition, implementation standard modules and its object files.
-libdir = /usr/local/lib/m2c
+libdir = /usr/local/libdata/m2c
 
 # The include file directory, for the m2lib.h header
 includedir = /usr/local/include
@@ -44,7 +44,7 @@ includedir = /usr/local/include
 tempdir=/tmp
 
 # The directory for installation of `m2c.1'.
-man1dir = /usr/local/share/man/man1
+man1dir = /usr/local/man/man1
 
 # The directory for documentation.
 docdir = /usr/local/share/doc/m2c
@@ -55,7 +55,7 @@ m2library=m2lib.a
 DOCS=README.md COPYING ChangeLog doc/*
 
 # C compiler and its flag used for compilation of C files.
-CC = gcc
+CC = egcc
 
 # May be set by configure so don't remove
 EXTERN_CFLAGS = 

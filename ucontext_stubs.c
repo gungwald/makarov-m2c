@@ -24,7 +24,7 @@
 
 #ifdef __OpenBSD__
 
-#include "ucontext_openbsd.h"
+#include "ucontext_stubs.h"
 
 const int ERROR = -1;
 

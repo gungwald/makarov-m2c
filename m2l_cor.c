@@ -19,7 +19,7 @@
 #ifndef __OpenBSD__
 #include <ucontext.h>
 #else
-#include "ucontext_openbsd.h"
+#include "ucontext_stubs.h"
 #endif
 
 #include <stdio.h>

@@ -19,9 +19,19 @@
 #ifndef MAKAROV_M2C_UCONTEXT_OPENBSD_H
 #define MAKAROV_M2C_UCONTEXT_OPENBSD_H
 
+#include <stddef.h> /* for size_t */
+
+typedef struct {
+        void *ss_sp;
+        size_t ss_size;
+        int ss_flags;
+} ucontext_stack_t;
+
 typedef struct ucontext
 {
-  int nothing_to_see_here;
+    unsigned long uc_flags;
+    struct ucontext *uc_link;
+    ucontext_stack_t uc_stack;
 } ucontext_t;
 
 extern int getcontext(ucontext_t *ucp);

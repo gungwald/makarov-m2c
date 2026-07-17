@@ -1,4 +1,4 @@
-M2C=/opt/makarov/m2c/bin/m2c
+M2C=m2c
 
 all: run
 
@@ -6,5 +6,7 @@ run: mayan-nums
 	./mayan-nums
 
 mayan-nums:
-	$(M2C) -C -v -o mayan-nums -make MayanNums.mod
+	$(M2C) -I/usr/local/include -o mayan-nums -make MayanNums.mod
 
+clean:
+	rm mayan-nums *.o

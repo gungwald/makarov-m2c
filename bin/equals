@@ -1,10 +1,3 @@
 #!/bin/sh
-# This syntax is needed for ancient shells, which have trouble with certain
-# characters in the first character of a string, like - or !.
-# shellcheck disable=SC2268
-if test "x$1" = "x$2"
-then
-  exit 0
-else
-  exit 1
-fi
+# The "x" in the comparison is needed for ancient shells.
+test "x$1" = "x$2"

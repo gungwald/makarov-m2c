@@ -212,14 +212,6 @@ then
   MAN1DIR=man/man1
   INCLUDEDIR=include
   DOCDIR=share/doc/m2c
-  if test ! -f /usr/include/libucontext/ucontext.h || test ! -f /usr/lib/libucontext.a
-  then
-    write-error "libucontext is required on OpenBSD. Please install it and try again." && exit 1
-  else
-    echo "libucontext detected. Adding include and link flags." >> "$temp_file"
-    EXTERN_CFLAGS='-I/usr/include/libucontext'
-    EXTERN_LDFLAGS='-lucontext'
-  fi
 elif equals "$OS" "Linux"
 then
   echo "Configuring installation directories for Linux." >> "$temp_file"
