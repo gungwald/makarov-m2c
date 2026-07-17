@@ -1,0 +1,6 @@
+1. Ask Google how to get debug setup for a Makefile project
+2. Ask Google how to fixy my "M" key
+3. Axe Google how to get debug symbols for a library like m2lib.a into my debug session
+   so I can jump into the library code when debugging
+4. Ask google why my MayanNums.c keeps showing up in my changed files
+   when I have added it to .gitignore
